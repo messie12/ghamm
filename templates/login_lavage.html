@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css')}}">
+<link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+<body>
+
+
+	<div class="w3-container w3-card-4 w3-border  w3-red" style="width: 400px; margin: 50px auto;">
+		<h2 class="w3-center">Connexion</h2>
+
+		<form class="w3-container" method="POST" action="traitement.php">
+
+			<label class="w3-text-blue"><b>Identifiant</b></label>
+			<input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Entrez votre identifiant" name="identifiant" required>
+
+			<label class="w3-text-blue"><b>Mot de passe</b></label>
+			<input class="w3-input w3-border" type="password" placeholder="Entrez votre mot de passe" name="motdepasse" required>
+
+			<button class="w3-btn w3-blue w3-margin-top w3-round-xlarge" type="submit">Valider</button>
+
+		</form>
+	</div>
+</body>
+</html> 
