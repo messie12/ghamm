@@ -12,6 +12,9 @@ app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_1239'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'KC_XqKNZbq68rNpTfyWq'
 app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_1239'
 
+# Ajoutez le paramètre de connexion TLS
+app.config['MYSQL_DATABASE_HOST'] += "?ssl_ca=/chemin/vers/autorite_cert.pem"
+
 # Créez une instance MySQL en utilisant la configuration de votre application
 mysql = MySQL(app)
 
@@ -210,6 +213,6 @@ def payement():
         mysql.connection.commit()
         return redirect(url_for("Data"))
  
-if __name__ == '__main':
+if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
