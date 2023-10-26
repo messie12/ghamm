@@ -68,7 +68,7 @@ def get_donnees():
     return jsonify(donnees_list)
 
 
-@app.route('/acceuil') 
+@app.route('/') 
 def index_acceuil():
     return  render_template("acceuilx.html") 
 
