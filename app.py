@@ -2,12 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_mysqldb import MySQL
 import os
 
+from flask import Flask
+
+
 app = Flask(__name__)
 app.secret_key = "secret_key"
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'horizon'
+app.config['MYSQL_DATABASE_HOST'] = 'dfad4f63-2d70-4a76-88ab-f718d1ee1b6e.ghamm-servi-1239.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_1239'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'KC_XqKNZbq68rNpTfyWq'
+app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_1239'
+
+# Créez une instance MySQL en utilisant la configuration de votre application
 mysql = MySQL(app)
 
 # Exemple de route pour recevoir des données via POST
