@@ -20,13 +20,7 @@ app.config['MYSQL_DATABASE_DB'] = os.environ.get('DB_NAME')
 app.config['MYSQL_DATABASE_PORT'] = 33848  
 
 
-'''app=Flask(__name__)
-app.secret_key= "secret_key"
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '' 
-app.config['MYSQL_DB'] = 'horizon'
-'''
+
 
 
 # Créez une instance MySQL en utilisant la configuration de votre application
