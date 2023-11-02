@@ -4,16 +4,24 @@ import os
 
 from flask import Flask
 
-
+ 
 app = Flask(__name__)
 app.secret_key = "secret_key"
-app.config['MYSQL_DATABASE_HOST'] = 'dfad4f63-2d70-4a76-88ab-f718d1ee1b6e.ghamm-servi-1239.mysql.a.osc-fr1.scalingo-dbs.com'
-app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_1239'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'KC_XqKNZbq68rNpTfyWq'
-app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_1239'
+app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_5741'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
+app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741'
 
-# Ajoutez le paramètre de connexion TLS
-app.config['MYSQL_DATABASE_HOST'] += "?ssl_ca=/chemin/vers/autorite_cert.pem"
+'''app=Flask(__name__)
+app.secret_key= "secret_key"
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '' 
+app.config['MYSQL_DB'] = 'horizon'
+'''
+
+
+
 
 # Créez une instance MySQL en utilisant la configuration de votre application
 mysql = MySQL(app)
@@ -21,18 +29,19 @@ mysql = MySQL(app)
 # Exemple de route pour recevoir des données via POST
 @app.route('/T1', methods=['POST'])
 def receive_data():
-    print('La fonction est déjà appelée')
     data = request.get_json()
     print("Received data:", data)
     donnees = data.values()
     _donnees = tuple(donnees)
     print("tuple de données ------------------------", _donnees)
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO epargne_motocyclette (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Parking ) VALUES (%s, %s, %s, %s, %s, %s, %s)", _donnees)
-    mysql.connection.commit()
-    print("OK")
-    return jsonify({"message": "succès"})
-
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s , %s)", _donnees)
+        mysql.connection.commit()
+        print("OK")
+        return jsonify({"message": "succès"})
+    except:
+        print('les requettes provenant des terminaux ne trouve pas la base de donnée')
 # Exemple de route pour recevoir des données via POST
 @app.route('/matricule', methods=['POST'])
 def receive_dat():
@@ -43,13 +52,13 @@ def receive_dat():
     _donnees = tuple(donnees)
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM epargne_motocyclette WHERE Num_moteur=%s", _donnees)
+        cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_moteur=%s", _donnees)
         results = cur.fetchone()
         results = list(results) if results else None
         mysql.connection.commit()
         return jsonify({'donnees': results})
     except:
-        print("Le format de données est refusé")
+        print("Les formats des données sont refusé")
 
 # Autres routes...
 
@@ -60,7 +69,7 @@ def get_donnees():
     print('ici nous sommes dans get', matricules)
     tuples = (matricules, )
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM epargne_motocyclette WHERE Num_moteur=%s", tuples)
+    cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_moteur=%s", tuples)
     donnees = cur.fetchone()
     mysql.connection.commit()
     donnees_list = list(donnees) if donnees else []
@@ -90,21 +99,21 @@ def traitement_epargne():
         except:
             return 'erreur de connexion sur le serveur'
        
-        if results == None:
-            return redirect(url_for("traitement_epargne"))
+        if results == None: 
+            return redirect(url_for("index_acceuil"))
         else:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * from epargne_motocyclette  ")
+            cur.execute("SELECT * from EnregistrementMoto  ")
             data = cur.fetchall()
 
 
-            cur.execute("SELECT COUNT(*) FROM  epargne_motocyclette" )
+            cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
             nobreDenregistrment=cur.fetchone()[0]*500
             cur.close()
             
-            return render_template("shows_data.html",id_utilisateur=results[0],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
+            return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
     else:
-      return redirect(url_for("traitement_epargne"))
+      return redirect(url_for("index_acceuil"))   
   
 @app.route("/upload", methods =['POST'])
 def epargn_upload():
@@ -120,7 +129,7 @@ def epargn_upload():
 @app.route('/donnees', methods =["GET"] )
 def Data():
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * from epargne_motocyclette  ")
+        cur.execute("SELECT * from EnregistrementMoto  ")
         data = cur.fetchall()
         cur.close()
         return render_template("incude_tabl.html", payement_terminaux=data )
@@ -143,16 +152,22 @@ def login_epargne():
           
 
 
-@app.route('/insert', methods = ['POST'])
+@app.route('/inserts', methods = ['POST'])
 def insert():
 
     if request.method == "POST":
         
-        nom = request.form['nom']
-        matric = request.form['matric']
-        tel = request.form['tel']
+        conduct = request.form['conduct']
+        prop = request.form['prop']
+        moteur = request.form['n_moteur']
+        chasie = request.form['n_chasie']
+        marque = request.form['marque']
+        coul = request.form['coul']
+        secteur = request.form['secteur']
+        phone = request.form['phone']
         cur = mysql.connection.cursor()
-        
+        _donnes= (conduct, prop, moteur, chasie, marque, coul,secteur, phone )
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", _donnes)
         mysql.connection.commit()
         flash("les données sont inseré avec succes")
         
@@ -194,7 +209,7 @@ def detail_clent(id_data):
 
         donne = cur.fetchall()
         cur.close()
-        global shared_variable
+        global shared_variable 
         don_client =list(donne)
         print(donne)          
         return render_template('detail.html',details=donne)

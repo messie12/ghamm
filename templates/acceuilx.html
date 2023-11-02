@@ -4,36 +4,66 @@
 
 {% include "base.html" %}
 
-<header>
-  <div class=" w3-contenair">
-    <h1 class="w3-blue w3-center">GHAAM SERVICE</h1>
+<div class="w3-top">
+  <div class="w3-bar w3-dark-grey">
+    <a href="/" class="w3-bar-item w3-button">Accueil</a>
+    <a href="#" class="w3-bar-item w3-button">À propos</a>
+    <a href="#" class="w3-bar-item w3-button">Services</a>
+    <a href="#" class="w3-bar-item w3-button">Contact</a>
   </div>
-</header>
+</div>
+
+<style>
+  .w3-top {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+  </style>
+  
+
 {%block content%} {%endblock%}
 
   <body class=" w3-animate-zoom">
-    	<div class= "w3-contenair w3-border w3-card w3-round-xlarge w3-gray" style="margin-left: 10%; margin-right: 10%; ">
+    	
+    
+    <div class= "w3-contenair w3-border w3-card w3-round-xlarge w3-gray" style="margin-left: 10%; margin-right: 10%; margin-top: 5% ">
+       
+        <div class="w3-row" >
 
-        <div class="w3-contenair  w3-text-blue " style="margin-left: 10%; width: 20;">
-          <p> <strong class="w3-text-white"> service epargne </strong></p> 
-	        <a href="{{ url_for('login_epargne')}}">
-            <img class="w3-round-xlarge" src="{{ url_for('static', filename='img/post.jpg')}}" class="w3-hover-opacity " style="width:10%"> 
-          </a>
-          
-          <p> <strong class="w3-text-white"> service de lavage </strong></p> 
-			    <a href="{{ url_for('login_lvage')}}" >
-            <img  class="w3-round-xlarge" src="{{ url_for('static', filename='img/lave.jpg')}}" class="w3-hover-opacity" style="width:10%; ">
-		    	</a>
-       </div>
+                <div class="w3-col s6 m4 13" >
+                  <p> <strong class="w3-text-white" style="width: 300px; height: 200px; margin-left: 10%;"> enregistrement et Cotisation </strong></p> 
+                  <a href="{{ url_for('login_epargne')}}">
+                    <img class="w3-round-xlarge w3-image w3-small" src="{{ url_for('static', filename='img/post.jpg')}}" class="w3-hover-opacity "  style="width: 300px; height: 200px; margin-left: 10%;"> 
+                  </a>
+                </div>
+                
+                <div  class="w3-col s6 m4 13">
+                  <p> <strong class="w3-text-white"> Service de lavage </strong></p> 
+                  <a href="{{ url_for('login_lvage')}}" >
+                    <img  class="w3-round-xlarge w3-image w3-small" src="{{ url_for('static', filename='img/lave.jpg')}}" class="w3-hover-opacity"  style="width: 300px; height: 200px;  margin-bottom: 10%;" >
+                  </a>
+                </div>
+            
+                <div class="w3-col s6 m4 13">
+                  <p> <strong class="w3-text-white" style="width: 300px; height: 200px; margin-left: 10%;"> Suivie et localisation</strong></p> 
+                  <a href="{{ url_for('login_lvage')}}">
+                    <img class="w3-round-xlarge  w3-image w3-small" src="{{ url_for('static', filename='img/images.jpg')}}" class="w3-hover-opacity"  style="width: 300px; height: 200px; margin-left: 10%;">
+                  </a>  
+                </div>
 
-       <div class="w3-contenair  w3-text-blue" style="margin-left: 10%; margin-bottom: 10%;">
-        <p> <strong class="w3-text-white"> service d'enregistrement motocyclette</strong></p> 
-			   <a href="{{ url_for('login_lvage')}}">
-           <img class="w3-round-xlarge" src="{{ url_for('static', filename='img/moto.png')}}" class="w3-hover-opacity" style="width:10%">
 
-         </a>  
+
+                <div class="w3-col s6 m4 13">
+                  <p> <strong class="w3-text-white"> Situation de credit </strong></p> 
+                  <a href="{{ url_for('login_lvage')}}">
+                    <img class="w3-round-xlarge w3-image w3-small" src="{{ url_for('static', filename='img/credit.jPEG')}}" class="w3-hover-opacity"  style="width: 300px; margin-bottom: 10%; right:3%;">
+                  </a>  
+                </div>
+         </div>
       </div>
-		</div>
 
 
 

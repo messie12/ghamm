@@ -3,67 +3,96 @@
 <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css')}}">
 
+{% if id_utilisateur %}
+<div class="w3-top  success fixed-header">
+   <div class="w3-bar w3-dark-grey">
+      <button id="btnRetour" type="button" class="btn btn-success   w3-right" onclick="form_epargn()" style="margin-left: 5%;margin-top:2%; display: none; ">retour </button></h2>
+     <a href="/" class="w3-bar-item w3-button">Accueil</a>
+     <a href="#" class="w3-bar-item w3-button">À propos</a>
+     <a href="#" class="w3-bar-item w3-button">Services</a>
+     <a href="#" class="w3-bar-item w3-button">Contact</a>
+     <p class="w3-text-white w3-margin-left  w3-right">operateur <span class="w3-animate-zoom"><strong class="w3-text-green">{{id_utilisateur}}</strong></span>, connecter</p>
+    
+   </div>
+ </div>
+ 
+ <style>
+   .w3-top {
+     position: fixed;
+     width: 100%;
+     top: 0;
+     left: 0;
+     z-index: 1000;
+   }
+   </style>
 
 
-   <div id="myModal" class="modal fade" role="dialog">
+<div id="myModal" class="modal fade" role="dialog">
 
-      <div  class="modal-dialog "  >
+   <div class="modal-dialog "  >
           <div class="modal-content w3-blue">
+
                 <div class="modal-header">
-                 
                   <h4 class="modal-title">s'il vous plait inserer les données</h4>
                 </div>
 
               <div class="modal-body">
                    <form action="{{ url_for('insert') }}" method="POST">
                        <div class="form-group">
-                          <label>Nom:</label>
-                          <input type="text" class="form-control" name="nom" required="1">
+
+                          <label>Nom.conducteur:</label>
+                          <input type="text" class="form-control" name="conduct" required="1">
+                       
+
+                       <div class="form-group">
+                           <label>Nom.propriétaire:</label>
+                           <input type="text" class="form-control" name="prop" required="1">
                        </div>
 
                        <div class="form-group">
-                           <label>matricule:</label>
-                           <input type="text" class="form-control" name="matric" required="1">
-                       </div>
-
-                       <div class="form-group">
-                           <label>Telephone:</label>
-                           <input type="text" class="form-control" name="tel" required="1">
+                           <label>Numero.moteur:</label>
+                           <input type="text" class="form-control" name="n_moteur" required="1">
                         </div> 
 
                         <div class="form-group"></div>  
-                           <label>Numero de compt:</label>
-                           <input type="text" class="form-control" name="num_cmpt" required="1">
+                           <label>Numero.chasie:</label>
+                           <input type="text" class="form-control" name="n_chasie" required="1">
                         </div>
 
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit" style="margin-left:3%;">Imprimer</button>
+                        <div class="form-group"></div>  
+                           <label>Numero.chasie:</label>
+                           <input type="text" class="form-control" name="n_chasie" required="1">
                         </div>
+
+
+                        
+
+         
+                     
 
                         <div class="modal-footer">
+                           <button class="btn btn-primary" type="submit" style="margin-left:3%;">Envoyer</button>
                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
        
                    </form>
-
-               </div>
-
-
-               
-            </div>
-       </div>
+               </div>  
+            
+         </div>
+      </div>
    </div>
 
 
   
    {% include "base.html" %}
 <div  id="on" style="display:none;">
+
   
-   <div class=" w3-animate-zoom container " >
+  <div class=" w3-animate-zoom " style="margin-top: 5%;">
+     
    
       <div class="row">
-              <button type="button" class="btn btn-success " onclick="form_epargn()" style="margin-left: 5%;margin-top:2% ">Acceuil </button></h2>
-
+              
       {%with messages = get_flashed_messages()%}
       {%if messages%}
       {% for message in messages %}
@@ -77,10 +106,19 @@
       {%endif%}
       {%endwith%}
 
-       <table class="table table-striped ">
+     <style>
+      .fixed-header {
+         position: sticky;
+         top: 0;
+         background-color: #fff; /* Couleur d'arrière-plan de la rangée d'en-tête */
+         z-index: 1; /* Assurez-vous que la rangée d'en-tête est au-dessus du contenu du tableau */
+       }
+      </style> 
+      <div class="container-fluid">
+      <table class="table table-striped ">
            <tbody>    
-                 <tr class= success>
-                     <th>NUMERO</th>
+                 <tr class="success fixed-header">
+                     <th>ID</th>
                      <th>Nom.du chauffeur</th>
                      <th>Propriétaire</th>
                      <th>Num. Moteur</th>
@@ -91,7 +129,8 @@
                      <th>Date/heure</th>
                      <th>Action</th>
                   </tr>
-               <div class="btn container" >
+
+               <div class="btn container " >
                    {% for row in payement_terminaux %}
                      <tr>
                         <td>{{row.0}}</td>
@@ -114,7 +153,7 @@
                      </tr>
                </div>
             </div>
-      </div>
+         </div>
 
        <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -169,7 +208,7 @@
                </tbody>
                
             </table>
-
+         </div>
       </div>
    </div>
 </div>
@@ -184,40 +223,30 @@
 <div class="w3-animate-zoom" id="off" style="display: block;">
   
    
-   <header>
-                   
-        {% if id_utilisateur %}
-       <div class="w3-contenair w3-card-4 w3-blue " style="height: 100px;">
-           <h1 class="w3-center">GHAAM SERVICE</h1>
-           <h4 class="w3-text-white w3-margin-left">operateur <span class="w3-animate-zoom"><strong class="w3-text-gray">{{id_utilisateur}}</strong></span>, connecter</h4>
-     </div>
-           
-   </header>
    
-       <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel " style="margin-right:1% ;margin-left: 1%;max-height: 650; ">
-         <div class="w3-contenair">
-           <button type="button" class="btn btn-success  " onclick="fermer_()" style="margin-left:3% ; ">service recolte de font </button></h2>
-         
-           <button type="button" class="btn btn-success  " onclick="" style="margin-left:3% ; ">Enregistre un client</button></h2>
-         
-           <button type="button" class="btn btn-success  " data-toggle="modal" data-target="#myModal" style="margin-left:3% ; ">formulaire de recolte </button></h2>
-         </div>
+   
+       <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel " style="margin-right:1% ;margin-left: 1%;max-height: 650; margin-top: 5% ">
+            <div class="w3-contenair">
+               <button type="button" class="btn btn-success  " onclick="fermer_()" style="margin-left:3% ; ">service recolte de font </button></h2>
+               
+               <button type="button" class="btn btn-success  " onclick="" style="margin-left:3% ; ">Enregistre un client</button></h2>
+               
+               <button type="button" class="btn btn-success  " data-toggle="modal" data-target="#myModal" style="margin-left:3% ; ">formulaire de recolte </button></h2>
+            </div>
         
-         <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel w3-gray " style="margin-right:1% ;margin-left: 1%;max-height: 650; ">
-         <br>
-         <p><label for="" class="w3-text-white"> nombre de moto déja enrgistre :</label></p>
-         <p> <label for=""class="w3-text-white"> fonts déja recolté: <span class="w3-text-yellow">{{nbr_enregis}} Fc</span></label></p>
-          <p><label for=""class="w3-text-white"> depense du jour: </label></p>
-         <p><label for=""class="w3-text-white"> depense total: </label></p>
-         <p><label for=""class="w3-text-white"> nombre de personne ayant recu le credit: </label></p>
-         <p><label for=""class="w3-text-white"> fonts total de credit offert : </label></p>
-         <p><label for=""class="w3-text-white"> Agent 0001 a déja recolté :<span class="w3-text-yellow">{{AG1}} Fc.</span> </label></p>
-         <p><label for=""class="w3-text-white"> Agent 0002 a déja recolté :<span class="w3-text-yellow">{{AG2}} Fc.</span> </label></p>
-         <p><label for=""class="w3-text-white"> Agent 0003 a déja recolté :<span class="w3-text-yellow">{{AG3}} Fc.</span> </label></p>
-         <p><label for=""class="w3-text-white"> Agent 0004 a déja recolté :<span class="w3-text-yellow">{{AG4}} Fc.</span> </label></p>
-         
-         
-         </div>
+            <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel w3-gray " style="margin-right:1% ;margin-left: 1%;max-height: 650; ">
+                  <br>
+                  <p><label for="" class="w3-text-white"> nombre de moto déja enrgistre :</label></p>
+                  <p> <label for=""class="w3-text-white"> fonts déja recolté: <span class="w3-text-yellow">{{nbr_enregis}} Fc</span></label></p>
+                  <p><label for=""class="w3-text-white"> depense du jour: </label></p>
+                  <p><label for=""class="w3-text-white"> depense total: </label></p>
+                  <p><label for=""class="w3-text-white"> nombre de personne ayant recu le credit: </label></p>
+                  <p><label for=""class="w3-text-white"> fonts total de credit offert : </label></p>
+                  <p><label for=""class="w3-text-white"> Agent 0001 a déja recolté :<span class="w3-text-yellow">{{AG1}} Fc.</span> </label></p>
+                  <p><label for=""class="w3-text-white"> Agent 0002 a déja recolté :<span class="w3-text-yellow">{{AG2}} Fc.</span> </label></p>
+                  <p><label for=""class="w3-text-white"> Agent 0003 a déja recolté :<span class="w3-text-yellow">{{AG3}} Fc.</span> </label></p>
+                  <p><label for=""class="w3-text-white"> Agent 0004 a déja recolté :<span class="w3-text-yellow">{{AG4}} Fc.</span> </label></p>
+            </div>
          
        </div>
 
@@ -229,7 +258,7 @@
    function form_epargn(){
         document.getElementById("on").style.display = "none";
         document.getElementById("off").style.display = "block";
-       
+        document.getElementById("btnRetour").style.display = "none";
         
    }
    
@@ -237,6 +266,7 @@
    function fermer_(){
      document.getElementById("off").style.display = "none";
      document.getElementById("on").style.display = "block";
+     document.getElementById("btnRetour").style.display = "block";
      
    }
      
