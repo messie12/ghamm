@@ -91,6 +91,7 @@ def traitement_epargne():
         nom=donne_form_log_epgne.get('identifiant')
         passe=donne_form_log_epgne.get('motdepasse')
         donner=(nom,passe)
+        print(donner)
         try:
             cur = mysql.connection.cursor()	
             cur.execute( "SELECT * FROM login WHERE Nom_utilisateur=%s and Mot_de_passe =%s", donner)
