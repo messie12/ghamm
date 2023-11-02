@@ -17,10 +17,7 @@ app.config['MYSQL_DATABASE_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_DATABASE_USER'] = os.environ.get('DB_USER')
 app.config['MYSQL_DATABASE_PASSWORD'] = os.environ.get('DB_PASSWORD')
 app.config['MYSQL_DATABASE_DB'] = os.environ.get('DB_NAME')
-app.config['MYSQL_DATABASE_PORT'] = 33848  
-
-
-
+app.config['MYSQL_DATABASE_PORT'] = os.environ.get('DB_PORT') 
 
 
 # Créez une instance MySQL en utilisant la configuration de votre application
