@@ -231,3 +231,8 @@ def payement():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
+
+if __name__ == "gunicorn.app.wsgiapp":
+    from app import app  # Importez à nouveau votre application Flask (ajustez le chemin selon votre structure de projet)
+    application = app
