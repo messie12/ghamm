@@ -1,9 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mysqldb import MySQL
-from dotenv import load_dotenv
-
-
-load_dotenv()
 
 import os
 
@@ -115,25 +111,25 @@ def traitement_epargne():
     else:
       return redirect(url_for("index_acceuil"))   
   
-@app.route("/upload", methods =['POST'])
+''''@app.route("/upload", methods =['POST'])
 def epargn_upload():
     if request.method == "POST":
         donne_form_base = request.form
         print(donne_form_base)
         return"les donnees sont envoyer avec succes "
     else:
-        return redirect(url_for("index_acceuil"))
+        return redirect(url_for("index_acceuil"))'''
        
 
 
-@app.route('/donnees', methods =["GET"] )
+'''@app.route('/donnees', methods =["GET"] )
 def Data():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * from EnregistrementMoto  ")
         data = cur.fetchall()
         cur.close()
         return render_template("incude_tabl.html", payement_terminaux=data )
-    
+    '''
 
 
 
@@ -183,7 +179,7 @@ def delete(id_data):
  except: 
     return"la supression de cette compte entrainera les pertes de donnés de payement" 
     
-    
+'''    
 @app.route('/update',methods=['POST','GET'])
 def update():
    if request.method == 'POST':
@@ -199,10 +195,10 @@ def update():
                WHERE id=%s """,( nom, matric, tel, num_compt, id_data,))
         flash("Data Updated Successfully")
         mysql.connection.commit()   
-        return redirect(url_for('Data'))
+        return redirect(url_for('Data'))'''
 
 
-@app.route('/detail/<string:id_data>')
+'''@app.route('/detail/<string:id_data>')
 def detail_clent(id_data):
         cur = mysql.connection.cursor()
         cur.execute("""SELECT p.* FROM paiements p JOIN compt_client c ON c.id = %s""" % (id_data))
@@ -212,7 +208,7 @@ def detail_clent(id_data):
         global shared_variable 
         don_client =list(donne)
         print(donne)          
-        return render_template('detail.html',details=donne)
+        return render_template('detail.html',details=donne)'''
 
 @app.route('/payement', methods = ['POST',"GET"])
 def payement():
@@ -224,7 +220,7 @@ def payement():
         print("voici",id_datas)
         flash("Record Has Been Deleted Successfully")
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO paiements(Numerocarnet, Montantpayer, client_id) VALUES (%s, %s, %s)", (num_carnet, payement, id_datas))
+        cur.execute("INSERT INTO EregistrementMoto(Numerocarnet, Montantpayer, client_id) VALUES (%s, %s, %s)", (num_carnet, payement, id_datas))
         mysql.connection.commit()
         return redirect(url_for("Data"))
  
