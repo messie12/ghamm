@@ -10,7 +10,7 @@ app.secret_key = "secret_key"
 app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
-app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741'
+app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741' 
 
 '''app=Flask(__name__)
 app.secret_key= "secret_key"
@@ -92,7 +92,7 @@ def traitement_epargne():
         donner=(nom,passe)
         try:
             cur = mysql.connection.cursor()	
-            cur.execute( "SELECT * FROM login WHERE nom_utilisateur=%s and mot_passe =%s", donner)
+            cur.execute( "SELECT * FROM login WHERE Nom_utilisateur=%s and Mot_de_passe =%s", donner)
             results = cur.fetchone() 
             print(results)
             
