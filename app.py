@@ -91,15 +91,16 @@ def traitement_epargne():
         nom=donne_form_log_epgne.get('identifiant')
         passe=donne_form_log_epgne.get('motdepasse')
         donner=(nom,passe)
-        print(donner)
+        
         try:
             cur = mysql.connection.cursor()	
+            print(donner)
             cur.execute( "SELECT * FROM login WHERE Nom_utilisateur=%s and Mot_de_passe =%s", donner)
             results = cur.fetchone() 
-            print(results)
+            print("okkookkook",results)
             
         except:
-            return 'erreur de connexion sur le serveur'
+            return '<h1>Erreur de liaison avec la base de donner<h1>'
        
         if results == None: 
             return redirect(url_for("index_acceuil"))
