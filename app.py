@@ -9,11 +9,11 @@ from flask import Flask
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
-app.config['MYSQL_DATABASE_HOST'] = os.environ.get('DB_HOST')
-app.config['MYSQL_DATABASE_USER'] = os.environ.get('DB_USER')
-app.config['MYSQL_DATABASE_PASSWORD'] = os.environ.get('DB_PASSWORD')
-app.config['MYSQL_DATABASE_DB'] = os.environ.get('DB_NAME')
-app.config['MYSQL_DATABASE_PORT'] = os.environ.get('DB_PORT') 
+app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_5741'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
+app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741'
+app.config['MYSQL_DATABASE_PORT'] = 33848 
 
 
 # Créez une instance MySQL en utilisant la configuration de votre application
