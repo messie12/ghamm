@@ -7,7 +7,7 @@ from flask import Flask
  
 app = Flask(__name__)
 app.secret_key = "secret_key"
-app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_DATABASE_HOST'] = '127.0.0.1'
 app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
 app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741' 
