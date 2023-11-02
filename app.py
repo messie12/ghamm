@@ -9,7 +9,7 @@ from flask import Flask
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
-app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com:33848'
 app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
 app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741'
@@ -230,5 +230,5 @@ if __name__ == '__main__':
 
 
 if __name__ == "gunicorn.app.wsgiapp":
-    from app import app  # Importez à nouveau votre application Flask (ajustez le chemin selon votre structure de projet)
+    from app import app  
     application = app
