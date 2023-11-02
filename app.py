@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_mysqldb import MySQL
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 import os
@@ -103,7 +104,8 @@ def traitement_epargne():
             results = cur.fetchone() 
             print("okkookkook",results)
             
-        except:
+        except Exception as e:
+            print(f"Erreur MySQL: {e}")
             return '<h1>Erreur de liaison avec la base de donner<h1>'
        
         if results == None: 
