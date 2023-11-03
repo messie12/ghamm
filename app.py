@@ -7,13 +7,13 @@ from flask import Flask
 
  
 app = Flask(__name__)
-app.secret_key = "secret_key"
 
-app.config['MYSQL_DATABASE_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com:33848'
-app.config['MYSQL_DATABASE_USER'] = 'ghamm_servi_5741'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
-app.config['MYSQL_DATABASE_DB'] = 'ghamm_servi_5741'
-app.config['MYSQL_DATABASE_PORT'] = 33848 
+app.secret_key = "secret_key"
+app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_PORT'] = 33848
+app.config['MYSQL_USER'] = 'ghamm_servi_5741'
+app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6' 
+app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 
 # Créez une instance MySQL en utilisant la configuration de votre application
@@ -53,9 +53,6 @@ def receive_dat():
     except:
         print("Les formats des données sont refusé")
 
-# Autres routes...
-
-# Exemple de route GET
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
     matricules = request.args.get('matricule')
