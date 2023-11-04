@@ -39,7 +39,8 @@ def receive_data():
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s , %s,  STR_TO_DATE('04/11/2023 04:42', '%d/%m/%Y %H:%i')))", _donnees)
         mysql.connection.commit()
-        print("OK")
+        cur.close()
+
         return jsonify({"message": "Succès"})
     except Exception as e:
         print(f'mysql: {e}')
@@ -59,6 +60,7 @@ def receive_dat():
         results = cur.fetchone()
         results = list(results) if results else None
         mysql.connection.commit()
+        cur.close()
         return jsonify({'donnees': results})
     except:
         print("Les formats des données sont refusé")
@@ -73,6 +75,7 @@ def get_donnees():
     cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_moteur=%s", tuples)
     donnees = cur.fetchone()
     mysql.connection.commit()
+    cur.close()
     donnees_list = list(donnees) if donnees else []
     print(donnees_list)
     return jsonify(donnees_list)
@@ -100,14 +103,10 @@ def traitement_epargne():
 
             if results!=None:
                 cur = mysql.connection.cursor()
-                cur.execute("SELECT * from EnregistrementMoto  ")
+                cur.execute("SELECT * FROM EnregistrementMoto  ")
                 data = cur.fetchall()
 
-
-                cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
-                nobreDenregistrment=cur.fetchone()[0]*500
-                cur.close()
-                return render_template("shows_data.html",id_utilisateur=results[1] ,payement_terminaux=data, nbr_enregis=nobreDenregistrment)
+                return render_template("shows_data.html",id_utilisateur=results[1] ,payement_terminaux=data,)
             else:
                 return '<h1>Erreur mot de passe<h1>'
         except Exception as e:
