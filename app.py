@@ -16,6 +16,14 @@ app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 
+"""app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '' 
+app.config['MYSQL_DB'] = 'horizon'"""
+
+
+
+
 # Créez une instance MySQL en utilisant la configuration de votre application
 mysql = MySQL(app)
 
@@ -32,9 +40,11 @@ def receive_data():
         cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s , %s)", _donnees)
         mysql.connection.commit()
         print("OK")
-        return jsonify({"message": "succès"})
-    except:
-        print('les requettes provenant des terminaux ne trouve pas la base de donnée')
+        return jsonify({"message": "Succès"})
+    except Exception as e:
+        print(f'mysql: {e}')
+        return jsonify({"message": "Erreur lors de l'insertion dans la base de données"})
+    
 # Exemple de route pour recevoir des données via POST
 @app.route('/matricule', methods=['POST'])
 def receive_dat():
@@ -45,7 +55,7 @@ def receive_dat():
     _donnees = tuple(donnees)
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_moteur=%s", _donnees)
+        cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", _donnees)
         results = cur.fetchone()
         results = list(results) if results else None
         mysql.connection.commit()
@@ -56,6 +66,7 @@ def receive_dat():
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
     matricules = request.args.get('matricule')
+    matricules= matricules[-5:]
     print('ici nous sommes dans get', matricules)
     tuples = (matricules, )
     cur = mysql.connection.cursor()
