@@ -22,7 +22,7 @@ def receive_data():
     _donnees=tuple(donnees)
     print("tuple de donner------------------------",_donnees)
     cur = mysql.connection.cursor()	
-    cur.execute("INSERT INTO epargne_motocyclette (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Parking ) VALUES( %s, %s, %s, %s, %s, %s, %s)",_donnees)
+    cur.execute("INSERT INTO epargne_motocyclette (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES( %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
     mysql.connection.commit()
     # Traitez les données reçues ici selon vos besoins
     print("okokokokokok")
