@@ -37,7 +37,7 @@ def receive_data():
     print("tuple de données ------------------------", _donnees)
     try:
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s , %s)", _donnees)
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s , %s,  STR_TO_DATE('04/11/2023 04:42', '%d/%m/%Y %H:%i')))", _donnees)
         mysql.connection.commit()
         print("OK")
         return jsonify({"message": "Succès"})
@@ -83,10 +83,9 @@ def index_acceuil():
     return  render_template("acceuilx.html") 
 
 
-@app.route("/traitement_epargne", methods =[ 'POST','GET'])
+@app.route("/traitement_epargne", methods =[ 'POST'])
 def traitement_epargne():
      
-    if request.method == "POST":
         donne_form_log_epgne = request.form
         nom=donne_form_log_epgne.get('identifiant')
         passe=donne_form_log_epgne.get('motdepasse')
@@ -98,47 +97,26 @@ def traitement_epargne():
             cur.execute( "SELECT * FROM login WHERE Nom_utilisateur=%s and Mot_de_passe =%s", donner)
             results = cur.fetchone() 
             print("okkookkook",results)
-            
+
+            if results!=None:
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * from EnregistrementMoto  ")
+                data = cur.fetchall()
+
+
+                cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
+                nobreDenregistrment=cur.fetchone()[0]*500
+                cur.close()
+                return render_template("shows_data.html",id_utilisateur=results[1] ,payement_terminaux=data, nbr_enregis=nobreDenregistrment)
+            else:
+                return '<h1>Erreur mot de passe<h1>'
         except Exception as e:
             print(f"Erreur MySQL: {e}")
             return '<h1>Erreur de liaison avec la base de donner<h1>'
+     
        
-        if results == None: 
-            return redirect(url_for("index_acceuil"))
-        else:
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT * from EnregistrementMoto  ")
-            data = cur.fetchall()
-
-
-            cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
-            nobreDenregistrment=cur.fetchone()[0]*500
-            cur.close()
-            
-            return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
-    else:
-      return redirect(url_for("index_acceuil"))   
+          
   
-''''@app.route("/upload", methods =['POST'])
-def epargn_upload():
-    if request.method == "POST":
-        donne_form_base = request.form
-        print(donne_form_base)
-        return"les donnees sont envoyer avec succes "
-    else:
-        return redirect(url_for("index_acceuil"))'''
-       
-
-
-'''@app.route('/donnees', methods =["GET"] )
-def Data():
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT * from EnregistrementMoto  ")
-        data = cur.fetchall()
-        cur.close()
-        return render_template("incude_tabl.html", payement_terminaux=data )
-    '''
-
 
 
 
