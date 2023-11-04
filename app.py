@@ -68,7 +68,6 @@ def receive_dat():
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
     matricules = request.args.get('matricule')
-    matricules= matricules[-5:]
     print('ici nous sommes dans get', matricules)
     tuples = (matricules, )
     cur = mysql.connection.cursor()
