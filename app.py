@@ -132,7 +132,7 @@ def login_epargne():
  
           
 
-
+"""
 @app.route('/inserts', methods = ['POST'])
 def insert():
 
@@ -162,7 +162,7 @@ def delete(id_data):
     mysql.connection.commit()
     return redirect(url_for('Data'))
  except: 
-    return"la supression de cette compte entrainera les pertes de donnés de payement" 
+    return"la supression de cette compte entrainera les pertes de donnés de payement" """
     
 '''    
 @app.route('/update',methods=['POST','GET'])
