@@ -11,13 +11,6 @@ app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 
-'''app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '' 
-app.config['MYSQL_DB'] = 'horizon'
- '''
-
-
 
 
 mysql = MySQL(app)
@@ -125,9 +118,21 @@ def traitement_epargne():
             
             return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
     else:
+
       return redirect(url_for("index_acceuil"))
+    
+@app.route("/login_lvage")
+def login_lvage():
+    return render_template("login_lavage.html")
+
+
+@app.route("/epargne")
+def login_epargne():
+    return render_template("login_epargne.html")
+
+ 
   
-@app.route("/upload", methods =['POST'])
+"""@app.route("/upload", methods =['POST'])
 def epargn_upload():
     if request.method == "POST":
         donne_form_base = request.form
@@ -151,16 +156,7 @@ def Data():
 
 
 
-@app.route("/login_lvage")
-def login_lvage():
-    return render_template("login_lavage.html")
 
-
-@app.route("/epargne")
-def login_epargne():
-    return render_template("login_epargne.html")
-
- 
           
 
 
@@ -190,35 +186,9 @@ def delete(id_data):
     return"la supression de cette compte entrainera les pertes de donnés de payement" 
     
     
-@app.route('/update',methods=['POST','GET'])
-def update():
-   if request.method == 'POST':
-        id_data= request.form['id']
-        nom = request.form['nom']
-        matric = request.form['matric']
-        tel = request.form['tel']
-        print(request.form)
-        num_compt = request.form['num_compt'] 
-        cur = mysql.connection.cursor()
-        cur.execute(""" UPDATE compt_client
-               SET Nom = %s, Matricule = %s, Telephone = %s 
-               WHERE id=%s """,( nom, matric, tel, num_compt, id_data,))
-        flash("Data Updated Successfully")
-        mysql.connection.commit()   
-        return redirect(url_for('Data'))
 
 
-@app.route('/detail/<string:id_data>')
-def detail_clent(id_data):
-        cur = mysql.connection.cursor()
-        cur.execute("""SELECT p.* FROM paiements p JOIN compt_client c ON c.id = %s""" % (id_data))
 
-        donne = cur.fetchall()
-        cur.close()
-        global shared_variable
-        don_client =list(donne)
-        print(donne)          
-        return render_template('detail.html',details=donne)
 
 @app.route('/payement', methods = ['POST',"GET"])
 def payement():
@@ -234,7 +204,7 @@ def payement():
         mysql.connection.commit()
         return redirect(url_for("Data"))
  
-                 
+                 """
 
 
 
