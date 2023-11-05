@@ -11,6 +11,15 @@ app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 
+'''app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '' 
+app.config['MYSQL_DB'] = 'horizon'
+ '''
+
+
+
+
 mysql = MySQL(app)
 
 @app.route('/T1', methods=['POST','POST'])
@@ -22,7 +31,7 @@ def receive_data():
     _donnees=tuple(donnees)
     print("tuple de donner------------------------",_donnees)
     cur = mysql.connection.cursor()	
-    cur.execute("INSERT INTO epargne_motocyclette (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES( %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
+    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES( %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
     mysql.connection.commit()
     # Traitez les données reçues ici selon vos besoins
     print("okokokokokok")
@@ -34,37 +43,40 @@ def receive_data():
 
 
 
-@app.route('/matricule', methods=['POST','POST'])
-def receive_dat(): 
-    print('la fonction est deja appelée')
-    data = request.get_json() 
-    print("Received data:", data) 
-    donnees=data.values()
-    _donnees=tuple(donnees)
-    print("tuple de donner------------------------",_donnees)
-    try:  
+@app.route('/matricule', methods=['POST'])
+def receive_dat():
+    print('La fonction est déjà appelée')
+    data = request.get_json()
+
+    if data is not None:
+        donnees = data.values()
+        _donnees = tuple(donnees)
+        print("Tuple de données ------------------------", _donnees)
+
+        try:
             cur = mysql.connection.cursor()
-            cur.execute( "SELECT * FROM epargne_motocyclette WHERE Num_moteur=%s", _donnees)
-            results = cur.fetchone() 
-            results=list(results) 
-            mysql.connection.commit()
-   
-            if results==None:
-                print(results)
-                return jsonify({'donnees': results})
-            else:
-                print(results)
-                return jsonify({'donnees': results})
-    except:
-        print("le format de donné refusé")
+            cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", _donnees)
+            result = cur.fetchone()
+
+            if result is not None:
+                # Traitez les données, puis renvoyez les données en réponse
+                return jsonify({'donnees': result})
+
+        except Exception as e:
+            print(e)
+
+    # Si le matricule n'a pas été trouvé ou une erreur s'est produite
+    return jsonify({'donnees': None})
+
+
 
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
     matricules = request.args.get('matricule')
     print('ici mous somme dans get', matricules)
-    tuples = (matricules, )
+    tuples = (matricules)
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM epargne_motocyclette WHERE Num_moteur=%s", tuples)
+    cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_chasie=%s", tuples)
     donnees = cur.fetchone()
     mysql.connection.commit()
     
@@ -94,31 +106,26 @@ def traitement_epargne():
         nom=donne_form_log_epgne.get('identifiant')
         passe=donne_form_log_epgne.get('motdepasse')
         donner=(nom,passe)
-        try:
-            cur = mysql.connection.cursor()	
-            cur.execute( "SELECT * FROM login WHERE Nom_utilisateur= %s AND Mot_de_passe = %s", donner)
-            results = cur.fetchone() 
-            print(results)
-            
-        except Exception as e:
-            print(f"mysql:{e}")
-            return 'erreur de connexion sur le serveur'
-            print(f"mysql:{e}")
+        
+        cur = mysql.connection.cursor()	
+        cur.execute( "SELECT * FROM login WHERE Nom_utilisateur= %s AND Mot_de_passe = %s", donner)
+        results = cur.fetchone() 
+        print(results)       
         if results == None:
-            return redirect(url_for("traitement_epargne"))
+            return redirect(url_for("index_acceuil"))
         else:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * EnregistrementMoto  ")
+            cur.execute("SELECT * FROM  EnregistrementMoto  ")
             data = cur.fetchall()
 
 
-            cur.execute("SELECT COUNT(*) FROM  epargne_motocyclette" )
+            cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
             nobreDenregistrment=cur.fetchone()[0]*500
             cur.close()
             
-            return render_template("shows_data.html",id_utilisateur=results[0],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
+            return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
     else:
-      return redirect(url_for("traitement_epargne"))
+      return redirect(url_for("index_acceuil"))
   
 @app.route("/upload", methods =['POST'])
 def epargn_upload():
@@ -134,7 +141,7 @@ def epargn_upload():
 @app.route('/donnees', methods =["GET"] )
 def Data():
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * from epargne_motocyclette  ")
+        cur.execute("SELECT * from EnregistrementMoto  ")
         data = cur.fetchall()
         cur.close()
         return render_template("incude_tabl.html", payement_terminaux=data )
