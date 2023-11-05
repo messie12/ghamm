@@ -1,5 +1,6 @@
 from flask import Flask, render_template,request, redirect, url_for,flash, jsonify
 from flask_mysqldb import MySQL 
+import os
 
 app=Flask(__name__)
 app.secret_key= "secret_key"
@@ -29,11 +30,6 @@ def receive_data():
     # Traitez les données reçues ici selon vos besoins
     print("okokokokokok")
     return jsonify({"message": " succés"})
-
-
-
-
-
 
 
 @app.route('/matricule', methods=['POST'])
@@ -81,11 +77,6 @@ def get_donnees():
     print(donnees_list)
     return jsonify(donnees_list)
 
-
- 
-
-
-
 @app.route('/') 
 def index_acceuil():
     return  render_template("acceuilx.html") 
@@ -130,84 +121,10 @@ def login_lvage():
 def login_epargne():
     return render_template("login_epargne.html")
 
- 
-  
-"""@app.route("/upload", methods =['POST'])
-def epargn_upload():
-    if request.method == "POST":
-        donne_form_base = request.form
-        print(donne_form_base)
-        return"les donnees sont envoyer avec succes "
-    else:
-        return redirect(url_for("index_acceuil"))
-       
 
 
-@app.route('/donnees', methods =["GET"] )
-def Data():
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT * from EnregistrementMoto  ")
-        data = cur.fetchall()
-        cur.close()
-        return render_template("incude_tabl.html", payement_terminaux=data )
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
     
-
-
-
-
-
-
-          
-
-
-@app.route('/insert', methods = ['POST'])
-def insert():
-
-    if request.method == "POST":
-        
-        nom = request.form['nom']
-        matric = request.form['matric']
-        tel = request.form['tel']
-        cur = mysql.connection.cursor()
-        
-        mysql.connection.commit()
-        flash("les données sont inseré avec succes")
-        
-
-@app.route('/delete/<string:id_data>', methods = ['GET'])
-def delete(id_data):
- try:
-    flash("Record Has Been Deleted Successfully")
-    cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM compt_client WHERE id=%s", (id_data,))
-    mysql.connection.commit()
-    return redirect(url_for('Data'))
- except: 
-    return"la supression de cette compte entrainera les pertes de donnés de payement" 
-    
-    
-
-
-
-
-@app.route('/payement', methods = ['POST',"GET"])
-def payement():
-     if request.method == "POST":
-        num_carnet = request.form['num_carnet']
-        payement = request.form['payement']
-        id_datas= request.form ['id']
-        print(num_carnet,payement)
-        print("voici",id_datas)
-        flash("Record Has Been Deleted Successfully")
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO paiements(Numerocarnet, Montantpayer, client_id) VALUES (%s, %s, %s)", (num_carnet, payement, id_datas))
-        mysql.connection.commit()
-        return redirect(url_for("Data"))
- 
-                 """
-
-
-
-if __name__ =='__main__':
-   
-   app.run(host='0.0.0.0', port=5000)
