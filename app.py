@@ -72,7 +72,7 @@ def get_donnees():
     try:
         matricules = request.args.get('matricule')
         print('ici mous somme dans get', matricules)
-        tuples = str((matricules,))
+        tuples = str((matricules))
         print("-------------------------------------",tuples)
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", tuples)
