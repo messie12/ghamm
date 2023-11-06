@@ -66,15 +66,18 @@ def receive_dat():
 
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
-    matricules = request.args.get('matricule')
-    print('ici mous somme dans get', matricules)
-    tuples = (matricules)
-    print("-------------------------------------",tuple)
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", tuples)
-    donnees = cur.fetchone()
-    mysql.connection.commit()
-    cur.close()
+
+    try:
+        matricules = request.args.get('matricule')
+        print('ici mous somme dans get', matricules)
+        tuples = str(matricules)
+        print("-------------------------------------",tuples)
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", tuples)
+        donnees = cur.fetchone()
+        mysql.connection.commit()
+    except:
+        print('Format de donnees invalide')
     
     if donnees is None:
         donnees_list = []
