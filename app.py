@@ -5,6 +5,7 @@ import os
 app=Flask(__name__)
 app.secret_key= "secret_key"
 
+
 app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_PORT'] = 33848
 app.config['MYSQL_USER'] = 'ghamm_servi_5741'
@@ -12,7 +13,8 @@ app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6'
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 
- 
+
+
 
 
 
@@ -126,23 +128,24 @@ def login_epargne():
 
 
 
-@app.route('/insert', methods=['POST'])
-def inserts():
+@app.route('/insert', methods=['POST', 'GET'])
+def insert():
     if request.method == "POST":
         nom = request.form['conduct']
         nom_prop = request.form['prop']
         moteur = request.form['n_moteur']
         chasie = request.form['n_chasie']
         marque = request.form['marque']
-        coul = request.form['coul']
-        localite = request.form['secteur']
-        phone = request.form['tel']
-        data = (nom, nom_prop, moteur, chasie, marque, coul, localite, phone)
+        coleur = request.form['color']
+        locaite = request.form['secteur']
+        telephone = request.form['telephone'] 
+        
+        data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone)
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", data)
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", data)
         mysql.connection.commit()
         flash("Les données sont insérées avec succès")
-        return redirect(url_for("index_acceuil"))
+        return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
 
  
 
