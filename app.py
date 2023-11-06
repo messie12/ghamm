@@ -5,16 +5,13 @@ import os
 app=Flask(__name__)
 app.secret_key= "secret_key"
 
-"""app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_PORT'] = 33848
 app.config['MYSQL_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6' 
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
-"""
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '' 
-app.config['MYSQL_DB'] = 'horizon'
+
+
  
 
 
@@ -30,7 +27,7 @@ def receive_data():
     _donnees=tuple(donnees)
     print("tuple de donner------------------------",_donnees)
     cur = mysql.connection.cursor()	
-    cur.execute("INSERT INTO Enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES( %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
+    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES( %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
     mysql.connection.commit()
     # Traitez les données reçues ici selon vos besoins
     print("okokokokokok")
@@ -49,7 +46,7 @@ def receive_dat():
 
         try:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM Enregistrementmoto WHERE N_chasie=%s", _donnees)
+            cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", _donnees)
             result = cur.fetchone()
 
             if result is not None:
@@ -70,7 +67,7 @@ def get_donnees():
     print('ici mous somme dans get', matricules)
     tuples = (matricules)
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Enregistrementmoto WHERE Num_chasie=%s", tuples)
+    cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_chasie=%s", tuples)
     donnees = cur.fetchone()
     mysql.connection.commit()
     
@@ -105,11 +102,11 @@ def traitement_epargne():
             return redirect(url_for("index_acceuil"))
         else:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM  Enregistrementmoto  ")
+            cur.execute("SELECT * FROM  EnregistrementMoto  ")
             data = cur.fetchall()
 
 
-            cur.execute("SELECT COUNT(*) FROM  Enregistrementmoto" )
+            cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
             nobreDenregistrment=cur.fetchone()[0]*500
             cur.close()
             
@@ -142,7 +139,7 @@ def inserts():
         phone = request.form['tel']
         data = (nom, nom_prop, moteur, chasie, marque, coul, localite, phone)
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO Enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", data)
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", data)
         mysql.connection.commit()
         flash("Les données sont insérées avec succès")
         return redirect(url_for("index_acceuil"))
