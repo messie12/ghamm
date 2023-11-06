@@ -36,47 +36,54 @@
                   <h4 class="modal-title">s'il vous plait inserer les données</h4>
                 </div>
 
-              <div class="modal-body">
-                   <form action="{{ url_for('insert') }}" method="POST">
-                       <div class="form-group">
+                <div class="modal-body">
+                  <form action="{{ url_for('inserts') }}" method="POST">
 
-                          <label>Nom.conducteur:</label>
-                          <input type="text" class="form-control" name="conduct" required="1">
+                      <div class="form-group">
+                          <label>Nom conducteur:</label>
+                          <input type="text" class="form-control" name="conduct" required="required">
                        
-
-                       <div class="form-group">
-                           <label>Nom.propriétaire:</label>
-                           <input type="text" class="form-control" name="prop" required="1">
-                       </div>
-
-                       <div class="form-group">
-                           <label>Numero.moteur:</label>
-                           <input type="text" class="form-control" name="n_moteur" required="1">
-                        </div> 
-
-                        <div class="form-group"></div>  
-                           <label>Numero.chasie:</label>
-                           <input type="text" class="form-control" name="n_chasie" required="1">
+                        <div class="form-group">  
+                            <label>Nom propriétaire:</label>
+                            <input type="text" class="form-control" name="prop" required="required">
                         </div>
 
-                        <div class="form-group"></div>  
-                           <label>Numero.chasie:</label>
-                           <input type="text" class="form-control" name="n_chasie" required="1">
+                        <div class="form-group"> 
+                          <label>Numero moteur:</label>
+                          <input type="text" class="form-control" name="n_moteur" required="required">
                         </div>
 
-
-                        
-
-         
-                     
-
-                        <div class="modal-footer">
-                           <button class="btn btn-primary" type="submit" style="margin-left:3%;">Envoyer</button>
-                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <div class="form-group"> 
+                          <label>Numero chasie:</label>
+                          <input type="text" class="form-control" name="n_chasie" required="required">
                         </div>
-       
-                   </form>
-               </div>  
+
+                        <div class="form-group"> 
+                          <label>Marque moto:</label>
+                          <input type="text" class="form-control" name="marque" required="required">
+                        </div>
+
+                        <div class="form-group"> 
+                          <label>Couleur:</label>
+                          <input type="text" class="form-control" name="coul" required="required">
+                        </div>
+                        <div class="form-group"> 
+                          <label>Secteur:</label>
+                          <input type="text" class="form-control" name="Secteur" required="required">
+                        </div>
+
+                        <div class="form-group"> 
+                          <label>Phone:</label>
+                          <input type="text" class="form-control" name="tel" required="required">
+                        </div>
+              
+                      <div class="modal-footer">
+                          <button class="btn btn-primary" type="submit" style="margin-left:3%;">Envoyer</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                  </form>
+              </div>
+              
             
          </div>
       </div>
@@ -90,7 +97,7 @@
   
   <div class=" w3-animate-zoom " style="margin-top: 5%;">
      
-   
+   ù
       <div class="row">
               
       {%with messages = get_flashed_messages()%}
@@ -163,8 +170,9 @@
                            <h4 class="modal-title">Update Information</h4>
                         </div>
 
+                <!-- 
                         <div class="modal-body">
-                             <form action="{{ url_for('update') }}" method="POST">
+                             
 
                                     <div class="form-group">
                                        <label>Nom:</label>
@@ -197,7 +205,7 @@
                            </div>
                      </div>
                </div>
-
+              -->
 
  
 
