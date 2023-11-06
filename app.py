@@ -75,7 +75,7 @@ def get_donnees():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", tuples)
         donnees = cur.fetchone()
-        mysql.connection.commit()
+        
     except:
         print('Format de donnees invalide')
     
