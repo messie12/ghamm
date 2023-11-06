@@ -63,23 +63,19 @@ def receive_dat():
     return jsonify({'donnees': None})
 
 
-
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
-
     donnees = None  # Initialisation de donnees avec une valeur par défaut
 
     try:
         matricules = request.args.get('matricule')
-        print('ici mous somme dans get', matricules)
-        tuples = str((matricules))
-        print("-------------------------------------",tuples)
+        print('Ici nous sommes dans get', matricules)
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", tuples)
+        cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", (matricules,))
         donnees = cur.fetchone()
         
     except:
-        print('Format de donnees invalide')
+        print('Format de données invalide')
     
     if donnees is None:
         donnees_list = []
@@ -88,8 +84,6 @@ def get_donnees():
     
     print(donnees_list)
     return jsonify(donnees_list)
-
-
 
 @app.route('/') 
 def index_acceuil():
