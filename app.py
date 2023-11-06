@@ -1,6 +1,7 @@
 from flask import Flask, render_template,request, redirect, url_for,flash, jsonify
 from flask_mysqldb import MySQL 
 import os
+from datetime import datetime
 
 app=Flask(__name__)
 app.secret_key= "secret_key"
@@ -140,9 +141,9 @@ def insert():
         locaite = request.form['secteur']
         telephone = request.form['telephone'] 
         
-        data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone)
+        data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone, datetime.now())
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", data)
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
         mysql.connection.commit()
         flash("Les données sont insérées avec succès")
         return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
