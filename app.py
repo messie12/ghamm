@@ -67,6 +67,8 @@ def receive_dat():
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
 
+    donnees = None  # Initialisation de donnees avec une valeur par défaut
+
     try:
         matricules = request.args.get('matricule')
         print('ici mous somme dans get', matricules)
@@ -86,6 +88,7 @@ def get_donnees():
     
     print(donnees_list)
     return jsonify(donnees_list)
+
 
 
 @app.route('/') 
