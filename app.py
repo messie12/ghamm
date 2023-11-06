@@ -30,7 +30,7 @@ def receive_data():
     _donnees=tuple(donnees)
     print("tuple de donner------------------------",_donnees)
     cur = mysql.connection.cursor()	
-    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, Secteur, Tel_prop ) VALUES( %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
+    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
     mysql.connection.commit()
     # Traitez les données reçues ici selon vos besoins
     print("okokokokokok")
@@ -69,10 +69,12 @@ def get_donnees():
     matricules = request.args.get('matricule')
     print('ici mous somme dans get', matricules)
     tuples = (matricules)
+    print("-------------------------------------",tuple)
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM EnregistrementMoto WHERE Num_chasie=%s", tuples)
+    cur.execute("SELECT * FROM EnregistrementMoto WHERE N_chasie=%s", tuples)
     donnees = cur.fetchone()
     mysql.connection.commit()
+    cur.close()
     
     if donnees is None:
         donnees_list = []
