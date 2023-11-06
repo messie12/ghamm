@@ -71,7 +71,7 @@ def get_donnees():
         matricules = request.args.get('matricule')
         print('Ici nous sommes dans get', matricules)
         cur = mysql.connection.cursor()
-        cur.execute(f"SELECT * FROM EnregistrementMoto WHERE N_chasie = {'34846'}")
+        cur.execute(f"SELECT * FROM EnregistrementMoto WHERE N_chasie = {matricules}")
         donnees = cur.fetchone()
         
     except:
