@@ -15,10 +15,6 @@ app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 
 
-
-
-
-
 mysql = MySQL(app)
 
 @app.route('/T1', methods=['POST'])
@@ -30,7 +26,7 @@ def receive_data():
     _donnees=tuple(donnees)
     print("tuple de donner------------------------",_donnees)
     cur = mysql.connection.cursor()	
-    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",_donnees)
+    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",_donnees, datetime.now())
     mysql.connection.commit()
     # Traitez les données reçues ici selon vos besoins
     print("okokokokokok")
@@ -73,7 +69,7 @@ def get_donnees():
         cur = mysql.connection.cursor()
         cur.execute(f"SELECT * FROM EnregistrementMoto WHERE N_chasie = {matricules}")
         donnees = cur.fetchone()
-        
+         
     except:
         print('Format de données invalide')
     
@@ -112,7 +108,7 @@ def traitement_epargne():
 
 
             cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
-            nobreDenregistrment=cur.fetchone()[0]*500
+            nobreDenregistrment=cur.fetchone()[0]
             cur.close()
             
             return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
@@ -129,6 +125,9 @@ def login_lvage():
 def login_epargne():
     return render_template("login_epargne.html")
 
+@app.route("/Apropos")
+def apropos():
+    return render_template("messie.html")
 
 
 @app.route('/insert', methods=['POST', 'GET'])
@@ -150,7 +149,26 @@ def insert():
         flash("Les données sont insérées avec succès")
         return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
 
- 
+@app.route('/update',methods=['POST','GET'])
+def update():
+   if request.method == 'POST':
+        ID=  request.form['id']
+        nom = request.form['conduct']
+        nom_prop = request.form['prop']
+        moteur = request.form['n_moteur']
+        chasie = request.form['n_chasie']
+        marque = request.form['marque']
+        coleur = request.form['color']
+        localite = request.form['secteur']
+        telephone = request.form['telephone']  
+        cur = mysql.connection.cursor()
+        cur.execute(""" UPDATE EnregistrementMoto
+               SET Nom_chauffeur = %s, Proprietaire = %s, Num_moteur= %s, N_chasie= %s, Marque= %s, Couleur= %s ,secteur= %s,Tel_prop= %s 
+               WHERE id=%s """,( nom, nom_prop, moteur, chasie, marque, coleur, localite, telephone, ID))
+        flash("Data Updated Successfully")
+        mysql.connection.commit()   
+        return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
+
 
 
 
