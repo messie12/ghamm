@@ -6,7 +6,7 @@ from datetime import datetime
 app=Flask(__name__)
 app.secret_key= "secret_key"
 
-
+ 
 app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_PORT'] = 33848
 app.config['MYSQL_USER'] = 'ghamm_servi_5741'
@@ -17,20 +17,26 @@ app.config['MYSQL_DB'] = 'ghamm_servi_5741'
 
 mysql = MySQL(app)
 
+from datetime import datetime  # Assurez-vous d'importer datetime
+
 @app.route('/T1', methods=['POST'])
-def receive_data(): 
-    print('la fonction est deja appelée')
+def receive_data():
+    print('La fonction est déjà appelée')
     data = request.get_json()
-    print("Received data:", data) 
-    donnees=data.values()
-    _donnees=tuple(donnees)
-    print("tuple de donner------------------------",_donnees)
-    cur = mysql.connection.cursor()	
-    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",_donnees, datetime.now())
+    print("Received data:", data)
+    donnees = data.values()
+    _donnees = tuple(donnees)
+    _donnees += (datetime.now(),)  # Ajoutez la date à la fin du tuple
+    print("Tuple de données:", _donnees)
+    
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
     mysql.connection.commit()
+    
     # Traitez les données reçues ici selon vos besoins
-    print("okokokokokok")
-    return jsonify({"message": " succés"})
+    print("Opération d'insertion réussie")
+    return jsonify({"message": "Succès"})
+
 
 
 @app.route('/matricule', methods=['POST'])
