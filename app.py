@@ -8,12 +8,13 @@ from MySQLdb import IntegrityError
 app=Flask(__name__)
 app.secret_key= "secret_key"
 
- 
+
 app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_PORT'] = 33848
 app.config['MYSQL_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6' 
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
+
 
 
 
@@ -30,24 +31,11 @@ def receive_data():
     _donnees = tuple(donnees)
     _donnees += (datetime.now(),)  # Ajoutez la date à la fin du tuple
     print("Tuple de données:", _donnees)
-    
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
-        mysql.connection.commit()
-    except IntegrityError as e:
-        if len(e.args) > 1:
-            value_causing_error = e.args[1]
-            cur = mysql.connection.cursor()
-            cur.execute(f"SELECT * FROM liste_noire WHERE N_chasie=%s", (value_causing_error,))
-            alerte = cur.fetchone()
-            if alerte is not None:
-                return jsonify({"message": "Erreur : N_chasie en liste noire"})
-        # Gérer d'autres types d'erreurs d'intégrité ici, le cas échéant
-    else:         
-        # Traitez les données reçues ici selon vos besoins
-        print("Opération d'insertion réussie")
-        return jsonify({"message": "Succès"})
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
+    mysql.connection.commit()
+    return jsonify({"message": "Erreur : N_chasie en liste noire"})
+      
 
 
 
@@ -212,23 +200,7 @@ def delete(id_data):
     mysql.connection.commit()
     return ("SUCCES")
 
-@app.route('/detail/<string:id_data>')
-def detail_clent(id_data):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT Enregistrementmoto.nom_chauffeur, EnregistrementMoto.date, Detail.nbreAchat, Detail.comptejour "
-                   "FROM Enregistrementmoto "
-                   "JOIN Detail ON Enregistrementmoto.id = Detail.EnregistrementMoto_id "
-                   "WHERE FROM Enregistrementmoto.id = %s", (id_data,))
-    result = cur.fetchone()
-    if result:
-            print(result)
-            username= result[0]
-            email= result[1]
-            age= result[2]
-            education_level= result[3]
-            phone_number= result[4]
-    data=(username,email, age, education_level, phone_number)  
-    return render_template('detail.html',details=data)
+
     
 @app.route('/cloture/<id>', methods=['GET', 'POST'])
 def cloture(id):
