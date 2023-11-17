@@ -250,16 +250,86 @@
 <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
 
 
+
+<div class="x3-animate-zoom" id="cloture" style="display: none;">
+  <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel " style="margin-right:1% ;margin-left: 1%;max-height: 650; margin-top: 5% ">
+    <h1> cloture</h1>
+     
+    <table class="table table-striped ">
+      <tbody>    
+            <tr class="success fixed-header">
+                 
+                <th>NOM REVENDEUR</th>
+                <th>CODE DE L'AGENT</th>
+                <th>NUMERO SERIE DE L'EQUIPEMENT</th>
+                <th>RECETTE</th>
+                <th>DETTE</th>
+                <th>DERNIERE ACTIVITE</th>
+                <th>Action</th>
+             </tr>
+
+             {% for rvd in revend %}
+                     <tr>
+                        <td>{{rvd.0}}</td>
+                        <td>{{rvd.1}}</td>
+                        <td>{{rvd.2}}</td>
+                        <td>{{rvd.3*500}} Fc</td>
+                        <td>{{rvd.4}}</td>  
+                        <td>{{rvd.5}}</td>
+                        <td>
+                 <button data-id="{{ rvd.1 }}" class="btn btn-warning btn-xs" onclick="capture('{{ rvd.1 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
+
+                        
+
+
+                     
+        <div id="clotures" class="modal fade" role="dialog">
+
+          <div class="modal-dialog "  >
+                 <div class="modal-content w3-blue">
+        
+                       <div class="modal-header">
+                            <h4 class="modal-title">Entrez le recette journaliere d'un commisionnaire</h4>
+                       </div>
+        
+                       <div class="modal-body">
+                          <form id="myForm" action="" method="POST">
+                            
+                                <div class="form-group">
+                                    <label>recette:</label>
+                                    <input type="text" class="form-control" name="recolte" required="required">
+                                </div>
+        
+                                <div class="modal-footer">
+                                    <button  class="btn btn-primary" type="submit" style="margin-left:3%;">APPLIQUER</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                          </form>          
+                      </div>   
+                  </div> 
+               </div>
+            </div>
+          </td>  
+             {% endfor  %}                    
+              </tbody>
+            </table> 
+          </div>
+        </div>
+
+
+        
+
+
 <div class="w3-animate-zoom" id="off" style="display: block;">
   
-   
-   
-   
+     
        <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel " style="margin-right:1% ;margin-left: 1%;max-height: 650; margin-top: 5% ">
             <div class="w3-contenair">
                <button type="button" class="btn btn-success  " onclick="fermer_()" style="margin-left:3% ; ">Motocyclistes Enregistrés</button></h2>
                
                <button type="button" class="btn btn-success  " onclick="" style="margin-left:3% ; ">Facture de cotisation</button></h2>
+
+               <button type="button" class="btn btn-success  " onclick="cloture()" style="margin-left:3% ; ">cloture de la journée</button></h2>
                
                <button type="button" class="btn btn-success  " data-toggle="modal" data-target="#myModal" style="margin-left:3% ; ">Enregistrer une moto </button></h2>
             </div>
@@ -289,6 +359,7 @@
         document.getElementById("on").style.display = "none";
         document.getElementById("off").style.display = "block";
         document.getElementById("btnRetour").style.display = "none";
+        document.getElementById("cloture").style.display = "none";
         
    }
    
@@ -297,8 +368,26 @@
      document.getElementById("off").style.display = "none";
      document.getElementById("on").style.display = "block";
      document.getElementById("btnRetour").style.display = "block";
-     
+     document.getElementById("cloture").style.display = "none";
    }
+
+   function cloture(){
+    document.getElementById("off").style.display = "none";
+    document.getElementById("on").style.display = "none";
+    document.getElementById("cloture").style.display = "block";
+    document.getElementById("btnRetour").style.display = "block";
+   }
+
+   
+
+    
+   function capture(id) {
+      // Récupérer l'ID et mettre à jour l'action du formulaire
+      document.getElementById('myForm').action = "/cloture/" + id;
+   }
+
+
+  
      
 </script>
 

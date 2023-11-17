@@ -2,6 +2,8 @@ from flask import Flask, render_template,request, redirect, url_for,flash, jsoni
 from flask_mysqldb import MySQL 
 import os
 from datetime import datetime
+from MySQLdb import IntegrityError
+
 
 app=Flask(__name__)
 app.secret_key= "secret_key"
@@ -29,13 +31,24 @@ def receive_data():
     _donnees += (datetime.now(),)  # Ajoutez la date à la fin du tuple
     print("Tuple de données:", _donnees)
     
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
-    mysql.connection.commit()
-    
-    # Traitez les données reçues ici selon vos besoins
-    print("Opération d'insertion réussie")
-    return jsonify({"message": "Succès"})
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur, Tel_prop, Date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
+        mysql.connection.commit()
+    except IntegrityError as e:
+        if len(e.args) > 1:
+            value_causing_error = e.args[1]
+            cur = mysql.connection.cursor()
+            cur.execute(f"SELECT * FROM liste_noire WHERE N_chasie=%s", (value_causing_error,))
+            alerte = cur.fetchone()
+            if alerte is not None:
+                return jsonify({"message": "Erreur : N_chasie en liste noire"})
+        # Gérer d'autres types d'erreurs d'intégrité ici, le cas échéant
+    else:         
+        # Traitez les données reçues ici selon vos besoins
+        print("Opération d'insertion réussie")
+        return jsonify({"message": "Succès"})
+
 
 
 
@@ -46,7 +59,7 @@ def receive_dat():
 
     if data is not None:
         donnees = data.values()
-        _donnees = tuple(donnees)
+        _donnees = tuple(donnees) 
         print("Tuple de données ------------------------", _donnees)
 
         try:
@@ -67,23 +80,35 @@ def receive_dat():
 
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
-    donnees = None  # Initialisation de donnees avec une valeur par défaut
+    donnees = None
+    Agent1 = "AP020H02305000140"
 
-    try:
-        matricules = request.args.get('matricule')
-        print('Ici nous sommes dans get', matricules)
+
+    matricules = request.args.get('matricule')
+    numero_serial = request.args.get('serials')
+    print('Voici la valeur du numéro de série:', numero_serial, "Matricule:", matricules)
+    try:   
         cur = mysql.connection.cursor()
-        cur.execute(f"SELECT * FROM EnregistrementMoto WHERE N_chasie = {matricules}")
+        cur.execute(f"SELECT * FROM EnregistrementMoto WHERE N_chasie = '{matricules}'")
         donnees = cur.fetchone()
-         
-    except:
+    except Exception as e:
         print('Format de données invalide')
+        print(f"Erreur : {str(e)}")
     
     if donnees is None:
         donnees_list = []
     else:
         donnees_list = list(donnees)
-    
+        if numero_serial == Agent1:
+            print('code agent 1')
+            cur = mysql.connection.cursor()
+            cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{Agent1}'")
+            mysql.connection.commit()
+        elif numero_serial=='Agent2':
+            print('code agent 2')
+            cur = mysql.connection.cursor()
+            cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{'Agent2'}'")
+            mysql.connection.commit() 
     print(donnees_list)
     return jsonify(donnees_list)
 
@@ -112,12 +137,16 @@ def traitement_epargne():
             cur.execute("SELECT * FROM  EnregistrementMoto  ")
             data = cur.fetchall()
 
+            cur = mysql.connection.cursor() 
+            cur.execute("SELECT * FROM  revendeur  ")
+            revendeur = cur.fetchall()
 
+ 
             cur.execute("SELECT COUNT(*) FROM  EnregistrementMoto" )
             nobreDenregistrment=cur.fetchone()[0]
             cur.close()
             
-            return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment)
+            return render_template("shows_data.html",id_utilisateur=results[1],payement_terminaux=data, nbr_enregis=nobreDenregistrment, revend=revendeur)
     else:
 
       return redirect(url_for("index_acceuil"))
@@ -147,14 +176,23 @@ def insert():
         coleur = request.form['color']
         locaite = request.form['secteur']
         telephone = request.form['telephone'] 
-        
-        data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone, datetime.now())
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
-        mysql.connection.commit()
-        flash("Les données sont insérées avec succès")
-        return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
-
+        try: 
+            data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone, datetime.now())
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
+            mysql.connection.commit()
+            flash("Les données sont insérées avec succès")
+            return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
+        except IntegrityError as e:
+            if len(e.args) > 1:
+                value_causing_error = e.args[1]
+                print("cette matricule existe deja", value_causing_error)
+                cur = mysql.connection.cursor()
+                cur.execute(f"SELECT * FROM liste_noire WHERE N_chasie=%s", (value_causing_error,))
+                alerte = cur.fetchone()
+                if alerte is not None:
+                    flash("Erreur : N_chasie en liste noire")
+                    return render_template('N_chasie en liste noire')  # Remplacez 'error.html' par le nom de votre modèle HTML d'erreur
 @app.route('/update',methods=['POST','GET'])
 def update():
    if request.method == 'POST':
@@ -175,9 +213,45 @@ def update():
         mysql.connection.commit()   
         return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
 
+@app.route('/delete/<string:id_data>', methods = ['GET'])
+def delete(id_data):
+    flash("Record Has Been Deleted Successfully")
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM EnregistrementMoto WHERE id=%s", (id_data,))
+    mysql.connection.commit()
+    return ("SUCCES")
 
-
-
+@app.route('/detail/<string:id_data>')
+def detail_clent(id_data):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT Enregistrementmoto.nom_chauffeur, EnregistrementMoto.date, Detail.nbreAchat, Detail.comptejour "
+                   "FROM Enregistrementmoto "
+                   "JOIN Detail ON Enregistrementmoto.id = Detail.EnregistrementMoto_id "
+                   "WHERE FROM Enregistrementmoto.id = %s", (id_data,))
+    result = cur.fetchone()
+    if result:
+            print(result)
+            username= result[0]
+            email= result[1]
+            age= result[2]
+            education_level= result[3]
+            phone_number= result[4]
+    data=(username,email, age, education_level, phone_number)  
+    return render_template('detail.html',details=data)
+    
+@app.route('/cloture/<id>', methods=['GET', 'POST'])
+def cloture(id):
+    if request.method == 'POST':
+        conduct_value = request.form.get('recolte')
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT recette FROM revendeur WHERE code_agent = %s", (id,))
+        print(id)
+        resultat = cur.fetchone()
+        print('la valeur selection de reccette est ', (resultat[0]))
+        if resultat:
+             dette= int(conduct_value)
+             print("la dette du client est" ,dette)
+             return ("succes")
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
