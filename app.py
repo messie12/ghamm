@@ -176,23 +176,14 @@ def insert():
         coleur = request.form['color']
         locaite = request.form['secteur']
         telephone = request.form['telephone'] 
-        try: 
-            data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone, datetime.now())
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
-            mysql.connection.commit()
-            flash("Les données sont insérées avec succès")
-            return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
-        except IntegrityError as e:
-            if len(e.args) > 1:
-                value_causing_error = e.args[1]
-                print("cette matricule existe deja", value_causing_error)
-                cur = mysql.connection.cursor()
-                cur.execute(f"SELECT * FROM liste_noire WHERE N_chasie=%s", (value_causing_error,))
-                alerte = cur.fetchone()
-                if alerte is not None:
-                    flash("Erreur : N_chasie en liste noire")
-                    return render_template('N_chasie en liste noire')  # Remplacez 'error.html' par le nom de votre modèle HTML d'erreur
+         
+        data = (nom, nom_prop, moteur, chasie, marque, coleur, locaite, telephone, datetime.now())
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO EnregistrementMoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Marque, Couleur, secteur,Tel_prop, Date ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
+        mysql.connection.commit()
+        flash("Les données sont insérées avec succès")
+        return ("<h1 style ='color: red; font-size: 20px; font-weight: bold; text-align: center;'>Les données sont enregistré avec succes <h1>")
+        
 @app.route('/update',methods=['POST','GET'])
 def update():
    if request.method == 'POST':
