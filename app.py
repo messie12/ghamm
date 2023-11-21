@@ -9,12 +9,12 @@ app=Flask(__name__)
 app.secret_key= "secret_key"
 
 
+
 app.config['MYSQL_HOST'] = 'ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_PORT'] = 33773
 app.config['MYSQL_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6' 
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
-
 
 
 
@@ -70,6 +70,10 @@ def receive_dat():
 def get_donnees():
     donnees = None
     Agent1 = "AP020H02305000140"
+    Agent2 = "AP020H02305000135"
+    Agent3 = "AP020H02305000139"
+    Agent4 = "AP020H02305000146"
+    
 
 
     matricules = request.args.get('matricule')
@@ -92,10 +96,20 @@ def get_donnees():
             cur = mysql.connection.cursor()
             cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{Agent1}'")
             mysql.connection.commit()
-        elif numero_serial=='Agent2':
+        elif numero_serial==Agent2:
             print('code agent 2')
             cur = mysql.connection.cursor()
-            cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{'Agent2'}'")
+            cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{Agent2}'")
+            mysql.connection.commit() 
+        elif numero_serial==Agent3:
+            print('code agent 3')
+            cur = mysql.connection.cursor()
+            cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{Agent3}'")
+            mysql.connection.commit() 
+        elif numero_serial==Agent4:
+            print('code agent 4')
+            cur = mysql.connection.cursor()
+            cur.execute(f"UPDATE revendeur SET recette = recette + 1 WHERE serial = '{Agent4}'")
             mysql.connection.commit() 
     print(donnees_list)
     return jsonify(donnees_list)
@@ -205,14 +219,20 @@ def delete(id_data):
 @app.route('/cloture/<id>', methods=['GET', 'POST'])
 def cloture(id):
     if request.method == 'POST':
-        conduct_value = request.form.get('recolte')
+        recettes = float(request.form.get('recolte'))
         cur = mysql.connection.cursor()
         cur.execute("SELECT recette FROM revendeur WHERE code_agent = %s", (id,))
         print(id)
-        resultat = cur.fetchone()
-        print('la valeur selection de reccette est ', (resultat[0]))
-        if resultat:
-             dette= int(conduct_value)
+        resultat = float(cur.fetchone()[0]*500)
+        print('la valeur selection de reccette est ', (resultat))
+        if resultat is not None:
+             print("argent recolté",resultat)
+             print('argent versé',recettes)
+             dette= (resultat)-(recettes)
+             cur.execute("UPDATE revendeur SET Dette = %s WHERE code_agent = %s", (dette, id))
+             mysql.connection.commit()
+             cur.execute("UPDATE revendeur SET recette = %s WHERE code_agent = %s", (0, id))
+             mysql.connection.commit()
              print("la dette du client est" ,dette)
              return ("succes")
 
