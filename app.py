@@ -9,8 +9,8 @@ app=Flask(__name__)
 app.secret_key= "secret_key"
 
 
-app.config['MYSQL_HOST'] = 'f173a5bc-69f8-488f-b6a8-f931274e57f3.ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
-app.config['MYSQL_PORT'] = 33848
+app.config['MYSQL_HOST'] = 'ghamm-servi-5741.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_PORT'] = 33773
 app.config['MYSQL_USER'] = 'ghamm_servi_5741'
 app.config['MYSQL_PASSWORD'] = 'OLlaqQ9XfUuSitHRUKL6' 
 app.config['MYSQL_DB'] = 'ghamm_servi_5741'
