@@ -22,10 +22,10 @@ def custom_int(value):
 app.jinja_env.globals['custom_int'] = custom_int
 
 
-app.config['MYSQL_HOST'] = '5b2e37b0-57c5-4dc8-9f80-b679dbcc2586.ghamm-servi-3432.mysql.a.osc-fr1.scalingo-dbs.com'
-app.config['MYSQL_PORT'] = 35035
-app.config['MYSQL_USER'] = 'ghamm_servi_3432'
-app.config['MYSQL_PASSWORD'] = '2rLkyXj1hEA -XNyvQDCA' 
+app.config['MYSQL_HOST'] ='5b2e37b0-57c5-4dc8-9f80-b679dbcc2586.ghamm-servi-3432.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_PORT'] =35035
+app.config['MYSQL_USER'] ='ghamm_servi_3432'
+app.config['MYSQL_PASSWORD'] ='2rLkyXj1hEA -XNyvQDCA' 
 app.config['MYSQL_DB'] = 'ghamm_servi_3432'
 
 
