@@ -42,7 +42,7 @@ def receive_data():
     _donnees += (datetime.now(),)  # Ajoutez la date à la fin du tuple
     print("Tuple de données:", _donnees)
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO Enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Plaque, Marque, Couleur, secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
+    cur.execute("INSERT INTO enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Plaque, Marque, Couleur, secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
     mysql.connection.commit()
     return jsonify({"message": "Erreur : N_chasie en liste noire"})
       
@@ -62,7 +62,7 @@ def receive_dat():
 
         try:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM Enregistrementmoto WHERE N_chasie=%s", _donnees)
+            cur.execute("SELECT * FROM enregistrementmoto WHERE N_chasie=%s", _donnees)
             result = cur.fetchone()
 
             if result is not None:
@@ -91,7 +91,7 @@ def get_donnees():
     print('Voici la valeur du numéro de série:', numero_serial, "Matricule:", chasie)
     try:   
         cur = mysql.connection.cursor()
-        cur.execute(f"SELECT * FROM Enregistrementmoto WHERE N_chasie = '{chasie}'")
+        cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
         donnees = cur.fetchone()
     except Exception as e:
         print(f'le numero de chasie ne pas trouvé: {e}')
@@ -100,7 +100,7 @@ def get_donnees():
         listDon = []
     else:
         cur = mysql.connection.cursor()
-        cur.execute("UPDATE Enregistrementmoto SET cout_total = cout_total + 500, copteur_versement = copteur_versement + 1, date_lates_paye = %s WHERE N_chasie = %s", (datetime.now(), chasie))
+        cur.execute("UPDATE enregistrementmoto SET cout_total = cout_total + 500, copteur_versement = copteur_versement + 1, date_lates_paye = %s WHERE N_chasie = %s", (datetime.now(), chasie))
         mysql.connection.commit()
         if numero_serial == Agent1:
             print('code agent 1')
@@ -124,7 +124,7 @@ def get_donnees():
             mysql.connection.commit() 
    
     cur = mysql.connection.cursor()
-    cur.execute(f"SELECT * FROM Enregistrementmoto WHERE N_chasie = '{chasie}'")
+    cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
     donnees = cur.fetchone()
     listDon= list(donnees)
     print( listDon)
@@ -154,7 +154,7 @@ def traitement_epargne():
             return redirect(url_for("index_acceuil"))
         else:
             cur = mysql.connection.cursor()
-            cur.execute("SELECT * FROM  Enregistrementmoto")
+            cur.execute("SELECT * FROM  enregistrementmoto")
             data = cur.fetchall()
 
             cur = mysql.connection.cursor() 
@@ -163,7 +163,7 @@ def traitement_epargne():
             print("voici tout le revendeur",revendeur)
 
  
-            cur.execute("SELECT COUNT(*) FROM  Enregistrementmoto" )
+            cur.execute("SELECT COUNT(*) FROM  enregistrementmoto" )
             nobreDenregistrment=cur.fetchone()[0]
             cur.close()
             
@@ -201,7 +201,7 @@ def insert():
          
         data = (nom, nom_prop, moteur, chasie, plaque, marque, coleur, locaite, telephone)
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO Enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Plaque, Marque, Couleur, secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
+        cur.execute("INSERT INTO enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Plaque, Marque, Couleur, secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", data)
 
         mysql.connection.commit()
         flash("Les données sont insérées avec succès")
@@ -220,7 +220,7 @@ def update():
         localite = request.form['secteur']
         telephone = request.form['telephone']  
         cur = mysql.connection.cursor()
-        cur.execute(""" UPDATE Enregistrementmoto
+        cur.execute(""" UPDATE enregistrementmoto
                SET Nom_chauffeur = %s, Proprietaire = %s, Num_moteur= %s, N_chasie= %s, Marque= %s, Couleur= %s ,secteur= %s,Tel_prop= %s 
                WHERE id=%s """,( nom, nom_prop, moteur, chasie, marque, coleur, localite, telephone, ID))
         flash("Data Updated Successfully")
@@ -231,7 +231,7 @@ def update():
 def delete(id_data):
     flash("Record Has Been Deleted Successfully")
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM Enregistrementmoto WHERE id=%s", (id_data,))
+    cur.execute("DELETE FROM enregistrementmoto WHERE id=%s", (id_data,))
     mysql.connection.commit()
     return ("SUCCES")
 
@@ -274,7 +274,7 @@ def afficher_details_client(id_data):
     print(id_data)
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT Nom_chauffeur, cout_total, copteur_versement, date_lates_paye FROM Enregistrementmoto WHERE id= %s", (id_data,))
+        cur.execute("SELECT Nom_chauffeur, cout_total, copteur_versement, date_lates_paye FROM enregistrementmoto WHERE id= %s", (id_data,))
         details = cur.fetchone()
          # Convertir le champ Decimal en une chaîne de caractères formatée
         cout_total_str = "{:,}".format(details[1])  # Utilisez la virgule comme séparateur de milliers
@@ -301,7 +301,7 @@ def cotisation():
         
         try:   
             cur = mysql.connection.cursor()
-            cur.execute(f"SELECT * FROM Enregistrementmoto WHERE N_chasie = '{chasie}'")
+            cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
             donnees = cur.fetchone()
             if donnees is None:
                 print('Le numero de chasie n\'a pas été trouvé.')
