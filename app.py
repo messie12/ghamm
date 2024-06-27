@@ -10,7 +10,7 @@ app.secret_key= "secret_key"
 
 
 app.config['MYSQL_HOST'] = 'ghamm-servi-3432.mysql.a.osc-fr1.scalingo-dbs.com'
-app.config['MYSQL_PORT'] =35035
+app.config['MYSQL_PORT'] =34233
 app.config['MYSQL_USER'] = 'ghamm_servi_3432'
 app.config['MYSQL_PASSWORD'] = '2rLkyXj1hEA-XNyvQDCA' 
 app.config['MYSQL_DB'] = 'ghamm_servi_3432'
