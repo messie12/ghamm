@@ -336,7 +336,8 @@
              </tr>
 
              {% for rvd in revend %}
-                     <tr>
+                     <tr> 
+                        
                         <td>{{rvd.1}}</td>
                         <td>{{rvd.2}}</td>
                         <td>{{rvd.3}}</td>
@@ -344,7 +345,9 @@
                         <td>{{rvd.5}}</td>
                         <td>{{rvd.6}}</td>
                         <td>
-                 <button data-id="{{ rvd.1 }}" class="btn btn-warning btn-xs" onclick="capture('{{ rvd.1 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
+                 <button data-id="{{ rvd.1 }}" class="btn btn-warning btn-xs" onclick="capture('{{ rvd.0 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
+                 <button  class="btn btn-warning btn-xs" onclick="capture('{{ rvd.0 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
+
 
                         
 

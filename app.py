@@ -9,11 +9,17 @@ app=Flask(__name__)
 app.secret_key= "secret_key"
 
 
-app.config['MYSQL_HOST'] = '5b2e37b0-57c5-4dc8-9f80-b679dbcc2586.ghamm-servi-3432.mysql.a.osc-fr1.scalingo-dbs.com'
-app.config['MYSQL_PORT'] =35035
+app.config['MYSQL_HOST'] = 'ghamm-servi-3432.mysql.a.osc-fr1.scalingo-dbs.com'
+app.config['MYSQL_PORT'] =34233
 app.config['MYSQL_USER'] = 'ghamm_servi_3432'
 app.config['MYSQL_PASSWORD'] = '2rLkyXj1hEA-XNyvQDCA' 
 app.config['MYSQL_DB'] = 'ghamm_servi_3432'
+
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '' 
+app.config['MYSQL_DB'] = 'horizon'
 
 
 mysql = MySQL(app)
@@ -123,9 +129,9 @@ def get_donnees():
             cur.execute(f"UPDATE revendeur SET recette = recette + 500 WHERE serial = '{Agent4}'")
             mysql.connection.commit() 
    
-    cur = mysql.connection.cursor()
-    cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
-    donnees = cur.fetchone()
+    # cur = mysql.connection.cursor()
+    # cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
+    # donnees = cur.fetchone()
     listDon= list(donnees)
     print( listDon)
     return jsonify(listDon)
@@ -193,7 +199,7 @@ def insert():
         nom_prop = request.form['prop']
         moteur = request.form['n_moteur']
         chasie = request.form['n_chasie']
-        plaque = request.form['plaque']
+        plaque = request.form['plaque'] 
         marque = request.form['marque']
         coleur = request.form['color']
         locaite = request.form['secteur']
@@ -237,35 +243,30 @@ def delete(id_data):
 
 
     
-@app.route('/cloture/<id>', methods=['GET', 'POST'])
+@app.route('/cloture/<int:id>', methods=['GET', 'POST'])
 def cloture(id):
-    
     if request.method == 'POST':
         cur = mysql.connection.cursor()
-        cur.execute("SELECT recette FROM revendeur WHERE code_agent = %s", (id,))
+        cur.execute("SELECT recette FROM revendeur WHERE id = %s", (id,))
         rect=cur.fetchone()
         fraisVerser =(request.form.get('recolte'))
         print(rect)
         
-        if rect is not None:
-             venteJourne = (rect*500)
-             print("argent recolté",venteJourne)
-             print('argent versé',fraisVerser)
-             if venteJourne == 0.0:
-                venteJourne = venteJourne
-                reste= venteJourne-fraisVerser
-             
-                cur.execute(f"UPDATE revendeur SET Dette = Dette +{reste} WHERE code_agent = '{id}'")
+        if rect !=0:
+                rect=rect[0]
+                fraisVerser=int(fraisVerser)
+                print(type(rect))
+                print(type(fraisVerser))
+                venteJourne = rect - fraisVerser       
+                cur.execute(f"UPDATE revendeur SET Dette = Dette +{venteJourne} WHERE id = '{id}'")
                 mysql.connection.commit()
-                cur.execute("UPDATE revendeur SET recette = %s WHERE code_agent = %s", (0, id))
+                cur.execute("UPDATE revendeur SET recette = %s WHERE id = %s", (0, id))
                 mysql.connection.commit()
-                print("la dette du client est" ,reste)
-                return ("succes")
-             else:
-                 return("erreur")
+                print("la dette du client est" , venteJourne)
+
         else:
-             return("aucunee rette pour cette commitionaire")
-            
+             return("aucune recette pour cette commitionaire")
+    return jsonify({"message": "Erreur : N_chasie en liste noire"})       
 
 from flask import render_template
 
@@ -313,10 +314,7 @@ def cotisation():
                 return render_template("facture.html", data=donnees)
         except:
              # Rediriger l'utilisateur vers une page informant qu'une erreur s'est produite
-            return ("une erreur s'est produite")
-
-            
-
+            return jsonify({"message": "Erreur : N_chasie en liste noire"})
 
 
 
