@@ -16,10 +16,6 @@ app.config['MYSQL_PASSWORD'] = '2rLkyXj1hEA-XNyvQDCA'
 app.config['MYSQL_DB'] = 'ghamm_servi_3432'
 
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '' 
-app.config['MYSQL_DB'] = 'horizon'
 
 
 mysql = MySQL(app)
