@@ -8,14 +8,11 @@ from MySQLdb import IntegrityError
 app=Flask(__name__)
 app.secret_key= "secret_key"
 
-
 app.config['MYSQL_HOST'] = 'ghamm-servi-3432.mysql.a.osc-fr1.scalingo-dbs.com'
 app.config['MYSQL_PORT'] =34233
 app.config['MYSQL_USER'] = 'ghamm_servi_3432'
 app.config['MYSQL_PASSWORD'] = '2rLkyXj1hEA-XNyvQDCA' 
-app.config['MYSQL_DB'] = 'ghamm_servi_3432'
-
-
+app.config['MYSQL_DB'] = 'ghamm_servi_3432 '
 
 
 mysql = MySQL(app)
@@ -37,14 +34,24 @@ from datetime import datetime  # Assurez-vous d'importer datetime
 @app.route('/T1', methods=['POST'])
 def receive_data():
     print('La fonction est déjà appelée')
+    
+    # Récupérer les données JSON
     data = request.get_json()
-    print("Received data:", data)
+    print("Données reçues:", data)
+    
+    # Obtenir les valeurs des données sous forme de tuple
     donnees = data.values()
-    _donnees = tuple(donnees)
-    _donnees += (datetime.now(),)  # Ajoutez la date à la fin du tuple
-    print("Tuple de données:", _donnees)
+    Tdonnees = tuple(donnees)
+    
+    # Obtenir la date actuelle
+    date = datetime.now().strftime("%Y-%m-%d")
+    
+    # Ajouter la date au tuple
+     # Tdonnees = _donnees + (date,)
+    
+    print("Tuple de données:", Tdonnees)
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Plaque, Marque, Couleur, secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", _donnees)
+    cur.execute("INSERT INTO enregistrementmoto (Nom_chauffeur, Proprietaire, Num_moteur, N_chasie, Plaque, Marque, Couleur, secteur, Tel_prop) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", Tdonnees)
     mysql.connection.commit()
     return jsonify({"message": "Erreur : N_chasie en liste noire"})
       
@@ -76,62 +83,57 @@ def receive_dat():
 
     # Si le matricule n'a pas été trouvé ou une erreur s'est produite
     return jsonify({'donnees': None})
+ 
 
 
 @app.route('/get_donnees', methods=['GET'])
 def get_donnees():
-    donnees = None
-    Agent1 = "AP020H02305000140"
-    Agent2 = "AP020H02305000135"
-    Agent3 = "AP020H02305000139"
-    Agent4 = "AP020H02305000146"
-    
-
-    
+    liste_serial=[]
     chasie = request.args.get('matricule')
     numero_serial = request.args.get('serials')
-    print('Voici la valeur du numéro de série:', numero_serial, "Matricule:", chasie)
-    try:   
-        cur = mysql.connection.cursor()
-        cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
-        donnees = cur.fetchone()
-    except Exception as e:
-        print(f'le numero de chasie ne pas trouvé: {e}')
+    donnees = None
+    cur = mysql.connection.cursor()
+    cur.execute(f"SELECT * FROM revendeur ")
+    revendeurs= cur.fetchall()
+    mysql.connection.commit()
+    cur.close()
+    for revendeur in revendeurs :
+        liste_serial.append(revendeur[3])
+        print(revendeur[3])
+    
+    print(liste_serial)
+    print(numero_serial) 
+    print(liste_serial[2])
+    cur = mysql.connection.cursor()
+    cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
+    donnees = cur.fetchone()
+    print(donnees)
       
     if donnees is None:
         listDon = []
     else:
+
         cur = mysql.connection.cursor()
         cur.execute("UPDATE enregistrementmoto SET cout_total = cout_total + 500, copteur_versement = copteur_versement + 1, date_lates_paye = %s WHERE N_chasie = %s", (datetime.now(), chasie))
         mysql.connection.commit()
-        if numero_serial == Agent1:
-            print('code agent 1')
-            cur = mysql.connection.cursor()
-            cur.execute(f"UPDATE revendeur SET recette = recette + 500 WHERE serial = '{Agent1}'")
-            mysql.connection.commit()
-        elif numero_serial==Agent2:
-            print('code agent 2')
-            cur = mysql.connection.cursor()
-            cur.execute(f"UPDATE revendeur SET recette = recette + 500 WHERE serial = '{Agent2}'")
-            mysql.connection.commit() 
-        elif numero_serial==Agent3:
-            print('code agent 3')
-            cur = mysql.connection.cursor()
-            cur.execute(f"UPDATE revendeur SET recette = recette + 500 WHERE serial = '{Agent3}'")
-            mysql.connection.commit() 
-        elif numero_serial==Agent4:
-            print('code agent 4')
-            cur = mysql.connection.cursor()
-            cur.execute(f"UPDATE revendeur SET recette = recette + 500 WHERE serial = '{Agent4}'")
-            mysql.connection.commit() 
-   
-    # cur = mysql.connection.cursor()
-    # cur.execute(f"SELECT * FROM enregistrementmoto WHERE N_chasie = '{chasie}'")
-    # donnees = cur.fetchone()
-    listDon= list(donnees)
-    print( listDon)
-    return jsonify(listDon)
-   
+        print(f'taille de la liste est {len(liste_serial)}')
+    
+    for i in range(len(liste_serial)):
+            for liste in liste_serial:
+              if liste== numero_serial:
+                    print(f'serial POS {i} est {liste}')
+                    cur = mysql.connection.cursor()
+                    cur.execute(f"UPDATE revendeur SET recette = recette + 500 WHERE  serial = '{liste}'")
+                    mysql.connection.commit()
+                    cur.close()    
+            
+                    print('je suis la')
+                    listDon= list(donnees)
+                    return jsonify(listDon)    
+            else:
+                    return jsonify('')   
+              
+                
 @app.route('/') 
 def index_acceuil():
     return  render_template("acceuilx.html") 
@@ -159,7 +161,7 @@ def traitement_epargne():
             cur.execute("SELECT * FROM  enregistrementmoto")
             data = cur.fetchall()
 
-            cur = mysql.connection.cursor() 
+           
             cur.execute("SELECT * FROM  revendeur  ")
             revendeur = cur.fetchall()
             print("voici tout le revendeur",revendeur)
@@ -246,14 +248,17 @@ def cloture(id):
         cur.execute("SELECT recette FROM revendeur WHERE id = %s", (id,))
         rect=cur.fetchone()
         fraisVerser =(request.form.get('recolte'))
-        print(rect)
+        recet=rect[0]
+        print("la recette est",rect)
+        print("frais a remettre",fraisVerser)
         
-        if rect !=0:
-                rect=rect[0]
+        if recet >= 500:
                 fraisVerser=int(fraisVerser)
                 print(type(rect))
                 print(type(fraisVerser))
-                venteJourne = rect - fraisVerser       
+                if fraisVerser > recet:
+                    return "operation_invalide. le montant que vous inserez est trop a la recette de ce commisionnaire" 
+                venteJourne = recet - fraisVerser       
                 cur.execute(f"UPDATE revendeur SET Dette = Dette +{venteJourne} WHERE id = '{id}'")
                 mysql.connection.commit()
                 cur.execute("UPDATE revendeur SET recette = %s WHERE id = %s", (0, id))
@@ -261,8 +266,46 @@ def cloture(id):
                 print("la dette du client est" , venteJourne)
 
         else:
-             return("aucune recette pour cette commitionaire")
-    return jsonify({"message": "Erreur : N_chasie en liste noire"})       
+             return("aucune recette pour ce commitionaire")
+    return {"message": "Erreur : l'utilisateur POS n'a pas recette"} 
+
+
+@app.route('/desctivePOS/<int:id>', methods=['GET', 'POST'])
+def desctivePOS(id):
+    if request.method == 'POST':
+        fraisVerser =(request.form.get('numPOS'))
+        print(fraisVerser, type(fraisVerser))
+        if fraisVerser== "0":
+            fraisVerser="*"
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT serial FROM revendeur WHERE id = %s", (id,))
+            serial= cur.fetchone()
+            serial= serial[0]+str(fraisVerser)
+            cur.execute("UPDATE revendeur SET serial = %s WHERE id = %s", (serial, id))
+            mysql.connection.commit()
+            cur.close()
+            print(serial)
+            return 'le POS désactiver avec succes '
+        elif fraisVerser=="1":
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT serial FROM revendeur WHERE id = %s", (id,))
+            serial= cur.fetchone()
+            serial= serial[0].replace('*', '')
+            cur.execute("UPDATE revendeur SET serial = %s WHERE id = %s", (serial, id))
+            mysql.connection.commit()
+            cur.close()
+            print(serial)
+            return 'le POS activé avec succes '
+        else:
+            return ' Apuyez sur 0 ou 1 activez soit des activez le POS'
+
+       
+
+        
+        
+
+    return 'pos('+ str(id) +')desactivé'
+
 
 from flask import render_template
 

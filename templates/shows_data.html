@@ -244,7 +244,7 @@
                                        <input type="text" class="form-control" name="conduct" value="{{row.1}}">
                                     </div>
 
-                                    <div class="form-group">
+                                    <div class="form-group"> 
                                       <label>Nom propriétaire:</label>
                                        <input type="text" class="form-control" name="prop" value="{{row.2}}">
                                     </div>
@@ -341,12 +341,12 @@
                         <td>{{rvd.1}}</td>
                         <td>{{rvd.2}}</td>
                         <td>{{rvd.3}}</td>
-                        <td>{{rvd.4}}</td>  
-                        <td>{{rvd.5}}</td>
-                        <td>{{rvd.6}}</td>
+                        <td>{{rvd.4}}<span class="w3-text-green"> FC</span></td>  
+                        <td>{{rvd.5}} <span class="w3-text-green"> FC</span></td>
+                        <td><span class="w3-text-green">{{rvd.6}} </span></td>
                         <td>
                  <button data-id="{{ rvd.1 }}" class="btn btn-warning btn-xs" onclick="capture('{{ rvd.0 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
-                 <button  class="btn btn-warning btn-xs" onclick="capture('{{ rvd.0 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
+                 <button  class="btn btn-warning btn-xs" onclick="captur('{{ rvd.0 }}')" data-toggle="modal" data-target="#DESACTIvPOS">desactiver POS</button>
 
 
                         
@@ -366,7 +366,7 @@
                           <form id="myForm" action="" method="POST">
                             
                                 <div class="form-group">
-                                    <label>RECETTE:</label>
+                                    <label>RECETTE :</label>
                                     <input type="text" class="form-control" name="recolte" required="required">
                                 </div>
 
@@ -379,7 +379,40 @@
                   </div> 
                </div>
             </div>
+
+
+
+
+            <div id="DESACTIvPOS" class="modal fade" role="dialog">
+
+              <div class="modal-dialog "  >
+                     <div class="modal-content w3-blue">
+            
+                           <div class="modal-header">
+                                <h4 class="modal-title">Entrez un Numero de des activation ou d'activation de POS</h4>
+                           </div>
+            
+                           <div class="modal-body">
+                              <form id="Form" action="" method="POST">
+                                
+                                    <div class="form-group">
+                                        <label>DES ACTIVE/ ACTIVE POS:</label>
+                                        <input type="text" class="form-control" name="numPOS" required="required">
+                                    </div>
+    
+                                    <div class="modal-footer">
+                                        <button  class="btn btn-primary" type="submit" style="margin-left:3%;">APPLIQUER</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                              </form>          
+                          </div>   
+                      </div> 
+                   </div>
+                </div>
           </td>  
+
+
+          
              {% endfor  %}                    
               </tbody>
             </table> 
@@ -412,7 +445,7 @@
                   <p> <label for=""class="w3-text-white"> fonts déja recolté: <span class="w3-text-yellow">{{0}} Fc</span></label></p>
                   <p><label for=""class="w3-text-white"> depense du jour: </label></p>
                   <p><label for=""class="w3-text-white"> depense total: </label></p>
-                  <p><label for=""class="w3-text-white"> nombre de personne ayant recu le credit: </label></p>
+                  <p><label for=""class="w3-text-white"> nombre de personne ayant recu le credit: </label></p> 
                   <p><label for=""class="w3-text-white"> fonts total de credit offert : </label></p>
                   <p><label for=""class="w3-text-white"> {{revend[0][1]}} a déja recolté :<span class="w3-text-yellow">{{revend[0][4]}} Fc.</span> </label></p>
                   <p><label for=""class="w3-text-white"> {{revend[1][1]}} a déja recolté :<span class="w3-text-yellow">{{revend[1][4]  }} Fc.</span> </label></p>
@@ -457,6 +490,14 @@
       // Récupérer l'ID et mettre à jour l'action du formulaire
       document.getElementById('myForm').action = "/cloture/" + id;
    }
+
+   function captur(id) {
+      // Récupérer l'ID et mettre à jour l'action du formulaire
+      document.getElementById('Form').action = "/desctivePOS/"+ id;
+   }
+
+
+
 
 
   
