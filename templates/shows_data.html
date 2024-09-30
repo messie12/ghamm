@@ -1,0 +1,508 @@
+
+
+<link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css')}}">
+
+{% if id_utilisateur %}
+<div class="w3-top  success fixed-header">
+   <div class="w3-bar w3-dark-grey">
+      <button id="btnRetour" type="button" class="btn btn-success   w3-right" onclick="form_epargn()" style="margin-left: 5%;margin-top:2%; display: none; ">retour </button></h2>
+     <a href="/" class="w3-bar-item w3-button">Accueil</a>
+     <a href="/Apropos" class="w3-bar-item w3-button">À propos</a>
+     <a href="#" class="w3-bar-item w3-button">Services</a>
+     <a href="#" class="w3-bar-item w3-button">Contact </a>
+     <p class="w3-text-white w3-margin-left  w3-right">operateur <span class="w3-animate-zoom"><strong class="w3-text-green">{{id_utilisateur}}</strong></span>, connecter</p>
+    
+   </div>
+ </div>
+ 
+ <style>
+   .w3-top {
+     position: fixed;
+     width: 100%;
+     top: 0;
+     left: 0;
+     z-index: 1000;
+   }
+   </style>
+
+<div id="myModal" class="modal fade" role="dialog">
+
+   <div class="modal-dialog "  >
+          <div class="modal-content w3-blue">
+
+                <div class="modal-header">
+                  <h4 class="modal-title">s'il vous plait inserer les données</h4>
+                </div>
+
+                <div class="modal-body">
+                  <form action="/insert" method="POST">
+
+                      <div class="form-group">
+                          <label>Nom conducteur:</label>
+                          <input type="text" class="form-control" name="conduct" required="required">
+                       
+                        <div class="form-group">  
+                            <label>Nom propriétaire:</label>
+                            <input type="text" class="form-control" name="prop" required="required">
+                        </div>
+
+                        <div class="form-group"> 
+                          <label>Numero moteur:</label>
+                          <input type="text" class="form-control" name="n_moteur" required="required">
+                        </div>
+
+
+                        <div class="form-group"> 
+                          <label>Numero chasie:</label>
+                          <input type="text" class="form-control" name="n_chasie" required="required">
+                        </div>
+
+                        <div class="form-group"> 
+                          <label>N.plaque:</label>
+                          <input type="text" class="form-control" name="plaque" required="required">
+                        </div>
+
+                        <div class="form-group"> 
+                          <label>Marque moto:</label>
+                          <input type="text" class="form-control" name="marque" required="required">
+                        </div>
+
+                        <div class="form-group"> 
+                           <label>Couleur moto:</label>
+                           <input type="text" class="form-control" name="color" required="required">
+                         </div>
+
+                         <div class="form-group"> 
+                           <label>Localite:</label>
+                           <input type="text" class="form-control" name="secteur" required="required">
+                         </div>
+
+                         <div class="form-group"> 
+                           <label>Telephone:</label>
+                           <input type="text" class="form-control" name="telephone" required="required">
+                         </div>
+
+
+              
+                      <div class="modal-footer">
+                          <button class="btn btn-primary" type="submit" style="margin-left:3%;">Envoyer</button>
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                  </form>          
+               </div>   
+           </div> 
+        </div>
+     </div>
+</div>
+
+
+<div id="myModal2" class="modal fade" role="dialog">
+
+  <div class="modal-dialog "  >
+         <div class="modal-content w3-blue">
+
+               <div class="modal-header">
+                 <h4 class="modal-title">s'il vous plait saisisez le numéro de chasie</h4>
+               </div>
+
+               <div class="modal-body">
+                 <form action="/cotisation" method="POST">
+
+                       <div class="form-group"> 
+                         <label>Numero chasie:</label>
+                         <input type="text" class="form-control" name="chasi" required="required">
+                       </div>
+             
+                     <div class="modal-footer">
+                         <button class="btn btn-primary" type="submit" style="margin-left:3%;">Envoyer</button>
+                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     </div>
+                 </form>          
+              </div>   
+          </div> 
+       </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   {% include "base.html" %}
+<div  id="on" style="display:none;">
+
+  
+  <div class=" w3-animate-zoom " style="margin-top: 5%;">
+     
+   
+      <div class="row">
+              
+      {%with messages = get_flashed_messages()%}
+      {%if messages%}
+      {% for message in messages %}
+        <div class="alert alert-success alert-dismissable" role="alert">
+           <button type="button" class="close" data-dismiss="alert" aria-label ="close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+      {{message}}
+        </div>
+      {%endfor%}
+      {%endif%}
+      {%endwith%}
+
+     <style>
+      .fixed-header {
+         position: sticky;
+         top: 0;
+         background-color: #fff; /* Couleur d'arrière-plan de la rangée d'en-tête */
+         z-index: 1; /* Assurez-vous que la rangée d'en-tête est au-dessus du contenu du tableau */
+       }
+      </style> 
+      <div class="container-fluid">
+      <table class="table table-striped ">
+           <tbody>    
+                 <tr class="success fixed-header">
+                     <th>ID</th>
+                     <th>Nom.du chauffeur</th>
+                     <th>Propriétaire</th>
+                     <th>Num. Moteur</th>
+                     <th>Num.chasie</th>
+                     <th>N.plaque</th>
+                     <th>Marque</th>
+                     <th>Couleur</th>
+                     <th>Localité</th>
+                     <th>N.telephone</th>
+                     <th>Date/heure</th>
+                     <th>Action</th>
+                  </tr>
+
+               <div class="btn container " >
+                   {% for row in payement_terminaux %}
+                     <tr>
+                        <td>{{row.0}}</td>
+                        <td><span class="w3-text-green w3-strong">{{row.1}}</span></td>
+                        <td>{{row.2}}</td>
+                        <td>{{row.3}}</td>
+                        <td>{{row.4}}</td>
+                        <td>{{row.5}}</td>
+                        <td>{{row.6}}</td>
+                        <td>{{row.7}}</td>
+                        <td>{{row.8}}</td>
+                        <td>{{row.9}}</td>
+                        <td>{{row.10}}</td>
+
+                
+                        <td>
+                           <a href="/update/{{row.0}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</a>
+                           <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('etes vous sur de vouloire suprimer?')">suprimer</a>
+                           <a href="/detail/{{ row.0 }}" class="btn btn-success btn-xs">details</a> 
+                        </td>
+
+                     </tr>
+               </div>
+            </div>
+         </div>
+
+       <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                 <div class="modal-content">
+                       <div class="modal-header">
+                           <button type="button" class="close" data-dismiss="modal">&times;</button>
+                           <h4 class="modal-title">Update Information</h4>
+                        </div>
+                        <div class="modal-body">
+                           
+                           <form action="{{ url_for('update') }}" method="POST">
+
+
+                                    <div class="form-group">
+                                        <label>Nom conducteur:</label>
+                                       <input type="hidden"  name="id" value="{{row.0}}">
+                                       <input type="text" class="form-control" name="conduct" value="{{row.1}}">
+                                    </div>
+
+                                    <div class="form-group"> 
+                                      <label>Nom propriétaire:</label>
+                                       <input type="text" class="form-control" name="prop" value="{{row.2}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Numero moteur:</label>
+                                        <input type="text" class="form-control" name="n_moteur" value="{{row.3}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                       <label>Numero chasie:</label>
+                                        <input type="text" class="form-control" name="n_chasie" value="{{row.4}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label>N.plaque:</label>
+                                        <input type="text" class="form-control" name="plaque" value="{{row.5}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label>Marque moto:</label>
+                                        <input type="text" class="form-control" name="marque" value="{{row.6}}">
+                                    </div>
+
+                                   
+
+                                    <div class="form-group">
+                                      <label>Couleur moto:</label>
+                                        <input type="text" class="form-control" name="color" value="{{row.7}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label>Localite:</label>
+                                        <input type="text" class="form-control" name="secteur" value="{{row.8}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                       <label>Telephone:</label>
+                                    <input type="text" class="form-control" name="telephone" value="{{row.9}}">
+                                    </div>
+
+                                    <div class="modal-footer">
+                                       <button class="btn btn-primary w3-margin-left" type="sbumit">Mise a jour</button>
+                                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                     </div>
+                                 </form>
+                           </div>
+                     </div>
+               </div>
+              
+
+ 
+
+
+
+                 {% endfor  %}
+
+               </tbody>
+               
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+
+
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+<script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+
+
+
+<div class="x3-animate-zoom" id="cloture" style="display: none;">
+  <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel " style="margin-right:1% ;margin-left: 1%;max-height: 650; margin-top: 5% ">
+    <h1> cloture</h1>
+     
+    <table class="table table-striped ">
+      <tbody>    
+            <tr class="success fixed-header">
+                 
+                <th>NOM REVENDEUR</th>
+                <th>CODE DE L'AGENT</th>
+                <th>NUMERO SERIE DE L'EQUIPEMENT</th>
+                <th>RECETTE</th>
+                <th>DETTE</th>
+                <th>DERNIERE ACTIVITE</th>
+                <th>Action</th>
+             </tr>
+
+             {% for rvd in revend %}
+                     <tr> 
+                        
+                        <td>{{rvd.1}}</td>
+                        <td>{{rvd.2}}</td>
+                        <td>{{rvd.3}}</td>
+                        <td>{{rvd.4}}<span class="w3-text-green"> FC</span></td>  
+                        <td>{{rvd.5}} <span class="w3-text-green"> FC</span></td>
+                        <td><span class="w3-text-green">{{rvd.6}} </span></td>
+                        <td>
+                 <button data-id="{{ rvd.1 }}" class="btn btn-warning btn-xs" onclick="capture('{{ rvd.0 }}')" data-toggle="modal" data-target="#clotures">comptabilisé</button>
+                 <button  class="btn btn-warning btn-xs" onclick="captur('{{ rvd.0 }}')" data-toggle="modal" data-target="#DESACTIvPOS">desactiver POS</button>
+
+
+                        
+
+
+                     
+        <div id="clotures" class="modal fade" role="dialog">
+
+          <div class="modal-dialog "  >
+                 <div class="modal-content w3-blue">
+        
+                       <div class="modal-header">
+                            <h4 class="modal-title">Entrez la recette journalière d'un commisionnaire</h4>
+                       </div>
+        
+                       <div class="modal-body">
+                          <form id="myForm" action="" method="POST">
+                            
+                                <div class="form-group">
+                                    <label>RECETTE :</label>
+                                    <input type="text" class="form-control" name="recolte" required="required">
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button  class="btn btn-primary" type="submit" style="margin-left:3%;">APPLIQUER</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                          </form>          
+                      </div>   
+                  </div> 
+               </div>
+            </div>
+
+
+
+
+            <div id="DESACTIvPOS" class="modal fade" role="dialog">
+
+              <div class="modal-dialog "  >
+                     <div class="modal-content w3-blue">
+            
+                           <div class="modal-header">
+                                <h4 class="modal-title">Entrez un Numero de des activation ou d'activation de POS</h4>
+                           </div>
+            
+                           <div class="modal-body">
+                              <form id="Form" action="" method="POST">
+                                
+                                    <div class="form-group">
+                                        <label>DES ACTIVE/ ACTIVE POS:</label>
+                                        <input type="text" class="form-control" name="numPOS" required="required">
+                                    </div>
+    
+                                    <div class="modal-footer">
+                                        <button  class="btn btn-primary" type="submit" style="margin-left:3%;">APPLIQUER</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                              </form>          
+                          </div>   
+                      </div> 
+                   </div>
+                </div>
+          </td>  
+
+
+          
+             {% endfor  %}                    
+              </tbody>
+            </table> 
+          </div>
+        </div>
+
+
+        
+
+
+<div class="w3-animate-zoom" id="off" style="display: block;">
+  
+     
+       <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel " style="margin-right:1% ;margin-left: 1%;max-height: 650; margin-top: 5% ">
+            <div class="w3-contenair">
+               <button type="button" class="btn btn-success  " onclick="fermer_()" style="margin-left:3% ; ">Motocyclistes Enregistrés</button></h2>
+               
+               <button type="button" class="btn btn-success  " data-toggle="modal" data-target="#myModal2" style="margin-left:3% ; ">Facture de cotisation</button></h2>
+
+               <button type="button" class="btn btn-success  " onclick="cloture()" style="margin-left:3% ; ">cloture de la journée</button></h2>
+               
+               <button type="button" class="btn btn-success  " data-toggle="modal" data-target="#myModal" style="margin-left:3% ; ">Enregistrer une moto </button></h2>
+
+               <button type="button" class="btn btn-success  " data-toggle="modal" data-target="" style="margin-left:3% ; ">on activité cotisation" </button></h2>
+            </div>
+        
+            <div class="w3-contenair w3-card-4 w3-round-xlarge w3-panel w3-gray " style="margin-right:1% ;margin-left: 1%;max-height: 650; ">
+                  <br>
+                  <p><label for="" class="w3-text-white"> nombre de moto déja enrgistre : <span class="w3-text-yellow">{{nbr_enregis}}</span> </label></p>
+                  <p> <label for=""class="w3-text-white"> fonts déja recolté: <span class="w3-text-yellow">{{0}} Fc</span></label></p>
+                  <p><label for=""class="w3-text-white"> depense du jour: </label></p>
+                  <p><label for=""class="w3-text-white"> depense total: </label></p>
+                  <p><label for=""class="w3-text-white"> nombre de personne ayant recu le credit: </label></p> 
+                  <p><label for=""class="w3-text-white"> fonts total de credit offert : </label></p>
+                  <p><label for=""class="w3-text-white"> {{revend[0][1]}} a déja recolté :<span class="w3-text-yellow">{{revend[0][4]}} Fc.</span> </label></p>
+                  <p><label for=""class="w3-text-white"> {{revend[1][1]}} a déja recolté :<span class="w3-text-yellow">{{revend[1][4]  }} Fc.</span> </label></p>
+                  <p><label for=""class="w3-text-white"> Terminal a déja recolté :<span class="w3-text-yellow">{{0}} Fc.</span> </label></p>
+                  <p><label for=""class="w3-text-white"> Terminal  a déja recolté :<span class="w3-text-yellow">{{AG4}} Fc.</span> </label></p>
+            </div>
+         
+       </div>
+
+       {% endif %}
+      
+
+<script>
+
+   function form_epargn(){
+        document.getElementById("on").style.display = "none";
+        document.getElementById("off").style.display = "block";
+        document.getElementById("btnRetour").style.display = "none";
+        document.getElementById("cloture").style.display = "none";
+        
+   }
+   
+   
+   function fermer_(){
+     document.getElementById("off").style.display = "none";
+     document.getElementById("on").style.display = "block";
+     document.getElementById("btnRetour").style.display = "block";
+     document.getElementById("cloture").style.display = "none";
+   }
+
+   function cloture(){
+    document.getElementById("off").style.display = "none";
+    document.getElementById("on").style.display = "none";
+    document.getElementById("cloture").style.display = "block";
+    document.getElementById("btnRetour").style.display = "block";
+   }
+
+   
+
+    
+   function capture(id) {
+      // Récupérer l'ID et mettre à jour l'action du formulaire
+      document.getElementById('myForm').action = "/cloture/" + id;
+   }
+
+   function captur(id) {
+      // Récupérer l'ID et mettre à jour l'action du formulaire
+      document.getElementById('Form').action = "/desctivePOS/"+ id;
+   }
+
+
+
+
+
+  
+     
+</script>
+
+
+</html>

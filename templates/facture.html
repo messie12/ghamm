@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Biographie de Messie Kuetutinina</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css')}}">
+ 
+<!-- Style pour l'impression -->
+<style type="text/css" media="print">
+    /* Masquer certains éléments lors de l'impression */
+    .no-print {
+        display: none;
+    }
+
+    /* Autres styles pour l'impression */
+    body {
+        font-size: 12pt;
+    }
+
+    /* Ajoutez d'autres styles spécifiques pour l'impression ici */
+</style>
+</head>
+ 
+
+<div>
+<body>
+
+<!-- Contenu à imprimer -->
+<div>
+   <img src="{{ url_for('static', filename='img/ghaam.jPG')}}" alt="Logo de l'entreprise" style="LEFT%; height: 100px;">
+</div>
+<div>
+
+<h2>   GHAAM SERVICE </h2>
+<h3>     site de {{data[8]}} </h3>
+<p>----------------------------------------------------</p>
+<p style="margin-left:1%">CONTRIBUTION JOURNALIERE:<span>500</span></p>
+<p style="margin-left:1%">CODE AGENT              :<span>xxxx</span></p>
+<p style="margin-left:1%">NOM DE CONDUCTEUR       :<span>{{data[1]}}</span></p>
+<p style="margin-left:1%">NOM DE PROPRIETAIRE     :<span>{{data[2]}}</span></p>
+<p style="margin-left:1%">NUMERO MOTEUR           :<span>{{data[3]}}</span></p>
+<p style="margin-left:1%">NUMERO CHASIE           :<span>{{data[4]}}</span></p>
+<p style="margin-left:1%">NUMERO PLAQUE           :<span>{{data[5]}}</span></p>
+<p style="margin-left:1%">MARQUE                  :<span>{{data[6]}}</span></p>
+<p style="margin-left:1%">COULEUR                 :<span>{{data[7]}}</span></p>
+<p style="margin-left:1%">LOCALITE                :<span>{{data[8]}}</span></p>
+<p style="margin-left:1%">PHONE                   :<span>{{data[9]}}</span></p>
+<p style="margin-left:1%">DATE ENRE               :<span>{{data[10]}}</span></p>
+<p>----------------------------------------------------</p>
+</div>
+<!-- Bouton pour déclencher l'impression -->
+<button class="no-print " onclick="window.print()"> Imprimer </button>
+</div>
+</body>
+
+</div>
+</html>
